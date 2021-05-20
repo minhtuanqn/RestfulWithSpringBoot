@@ -1,0 +1,26 @@
+2021-05-21 00:01:09.008  INFO 400 --- [main] com.RestfullWithSpringBootApplication    : Starting RestfullWithSpringBootApplication using Java 11.0.10 on J5Y07H2 with PID 400 (D:\Assignment\RestfullWithSpringBoot\build\classes\java\main started by tuanmle in D:\Assignment\RestfullWithSpringBoot)
+2021-05-21 00:01:09.010  INFO 400 --- [main] com.RestfullWithSpringBootApplication    : No active profile set, falling back to default profiles: default
+2021-05-21 00:01:10.143  INFO 400 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-05-21 00:01:10.544  INFO 400 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 393 ms. Found 1 JPA repository interfaces.
+2021-05-21 00:01:11.014  INFO 400 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2021-05-21 00:01:11.016  INFO 400 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-05-21 00:01:11.016  INFO 400 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.45]
+2021-05-21 00:01:11.257  INFO 400 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-05-21 00:01:11.257  INFO 400 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2218 ms
+2021-05-21 00:01:11.334  INFO 400 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-05-21 00:01:11.418  INFO 400 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-05-21 00:01:11.450  INFO 400 --- [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2'. Database available at 'jdbc:h2:mem:tuanle'
+2021-05-21 00:01:11.832  INFO 400 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-05-21 00:01:11.854  INFO 400 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.30.Final
+2021-05-21 00:01:11.933  INFO 400 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-05-21 00:01:12.018  INFO 400 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2021-05-21 00:01:12.502  INFO 400 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-05-21 00:01:12.505  INFO 400 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-05-21 00:01:12.892  WARN 400 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-05-21 00:01:12.976  INFO 400 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-05-21 00:01:13.153  INFO 400 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2021-05-21 00:01:13.163  INFO 400 --- [main] com.RestfullWithSpringBootApplication    : Started RestfullWithSpringBootApplication in 4.53 seconds (JVM running for 6.03)
+2021-05-21 00:01:29.059  INFO 400 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-05-21 00:01:29.063  INFO 400 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-05-21 00:01:29.063  INFO 400 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2021-05-21 00:01:29.443  INFO 400 --- [http-nio-8080-exec-1] com.service.DefaultService               : 2021-05-21T00:01:29.442208300: Created staff with id 1
