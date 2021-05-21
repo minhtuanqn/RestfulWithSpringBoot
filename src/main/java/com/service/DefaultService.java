@@ -5,9 +5,13 @@ import com.model.StaffModel;
 import com.repository.DefaultRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Service layer
@@ -28,7 +32,7 @@ public class DefaultService {
 
 
     /**
-     * Service for create a new staff
+     * Creating a new staff
      * @param model was saved
      */
     public void createStaff(StaffModel model) {
@@ -40,9 +44,9 @@ public class DefaultService {
     }
 
     /**
-     * Service for update a existed staff
+     * Updating a existed staff
      * @param model
-     * @return updated or not
+     * @return updated or did not
      */
     public boolean updateStaff(StaffModel model) {
         LOGGER.info("Update staff with id: " + model.getId());
@@ -58,50 +62,71 @@ public class DefaultService {
         return false;
     }
 
-//    /**
-//     * Service for delete a existed staff
-//     * @param id
-//     */
-//    public void deleteStaffById(Integer id) {
-//        repository.deleteById(id);
-//    }
-//
-//    /**
-//     * Service for finding a staff by id
-//     * @param id
-//     * @return
-//     */
-//    public StaffModel findById(Integer id) {
-//        StaffEntity entity = repository.findById(id).get();
-//        return new StaffModel(entity);
-//    }
-//
-//    /**
-//     * Service for finding all exiested staff
-//     * @return
-//     */
-//    public List<StaffModel> findAll() {
-//        List<StaffModel> modelList = new ArrayList<>();
-//        Iterator<StaffEntity> entityIterator = repository.findAll().iterator();
-//        while (entityIterator.hasNext()) {
-//            StaffEntity entity = entityIterator.next();
-//            modelList.add(new StaffModel(entity));
-//        }
-//        return modelList;
-//    }
-//
-//    /**
-//     * Service for finding staff by first name
-//     * @param firstName
-//     * @return
-//     */
-//    public List<StaffModel> findByFirstName(String firstName) {
-//        List<StaffModel> modelList = new ArrayList<>();
-//        List<StaffEntity> entityList = repository.findByFirstName(firstName);
-//        for (StaffEntity entity : entityList) {
-//            modelList.add(new StaffModel(entity));
-//        }
-//        return modelList;
-//    }
+    /**
+     * Deleting a existed staff
+     * @param id
+     */
+    public boolean deleteStaffById(Integer id) {
+        boolean isExist = checkExistStaff(id);
+        if(isExist) {
+            repository.deleteById(id);
+            LOGGER.info("Deleted staff with id: " + id);
+            return true;
+        }
+        LOGGER.info("Staff with id does not exist: " + id);
+        return false;
+    }
+
+    /**
+     * Finding a staff by id
+     * @param id
+     * @return staff object
+     */
+    public StaffModel findById(Integer id) {
+        StaffEntity entity = repository.findById(id).get();
+        return new StaffModel(entity);
+    }
+
+    /**
+     * Finding all existed staff
+     * @return list of staff
+     */
+    public List<StaffModel> findAll() {
+        List<StaffModel> modelList = new ArrayList<>();
+        Iterator<StaffEntity> entityIterator = repository.findAll().iterator();
+        while (entityIterator.hasNext()) {
+            StaffEntity entity = entityIterator.next();
+            modelList.add(new StaffModel(entity));
+        }
+        return modelList;
+    }
+
+    /**
+     * Service for finding staff by first name
+     * @param firstName
+     * @return list of staff
+     */
+    public List<StaffModel> findByFirstName(String firstName) {
+        List<StaffModel> modelList = new ArrayList<>();
+        List<StaffEntity> entityList = repository.findByFirstName(firstName, Sort.by("first_name"));
+        for (StaffEntity entity : entityList) {
+            modelList.add(new StaffModel(entity));
+        }
+        return modelList;
+    }
+
+    /**
+     * Service for finding staff by last name
+     * @param lastName
+     * @return list of staff
+     */
+    public List<StaffModel> findByLastName(String lastName) {
+        List<StaffModel> modelList = new ArrayList<>();
+        List<StaffEntity> entityList = repository.findByLastName(lastName, Sort.by("last_name"));
+        for (StaffEntity entity: entityList) {
+            modelList.add(new StaffModel(entity));
+        }
+        return modelList;
+    }
 
 }
