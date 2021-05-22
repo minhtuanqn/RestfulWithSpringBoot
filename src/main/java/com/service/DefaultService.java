@@ -2,6 +2,7 @@ package com.service;
 
 import com.entity.StaffEntity;
 import com.model.StaffModel;
+import com.model.StaffResource;
 import com.repository.DefaultRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,14 +92,16 @@ public class DefaultService {
      * Finding all existed staff
      * @return list of staff
      */
-    public List<StaffModel> findAll() {
+    public StaffResource findAll() {
         List<StaffModel> modelList = new ArrayList<>();
         Iterator<StaffEntity> entityIterator = repository.findAll().iterator();
         while (entityIterator.hasNext()) {
             StaffEntity entity = entityIterator.next();
             modelList.add(new StaffModel(entity));
         }
-        return modelList;
+        StaffResource resource = new StaffResource();
+        resource.setData(modelList);
+        return resource;
     }
 
     /**
@@ -106,13 +109,15 @@ public class DefaultService {
      * @param firstName
      * @return list of staff
      */
-    public List<StaffModel> findByFirstName(String firstName) {
+    public StaffResource findByFirstName(String firstName) {
         List<StaffModel> modelList = new ArrayList<>();
-        List<StaffEntity> entityList = repository.findByFirstName(firstName, Sort.by("first_name"));
+        List<StaffEntity> entityList = repository.findByFirstName(firstName);
         for (StaffEntity entity : entityList) {
             modelList.add(new StaffModel(entity));
         }
-        return modelList;
+        StaffResource resource = new StaffResource();
+        resource.setData(modelList);
+        return resource;
     }
 
     /**
@@ -120,13 +125,15 @@ public class DefaultService {
      * @param lastName
      * @return list of staff
      */
-    public List<StaffModel> findByLastName(String lastName) {
+    public StaffResource findByLastName(String lastName) {
         List<StaffModel> modelList = new ArrayList<>();
-        List<StaffEntity> entityList = repository.findByLastName(lastName, Sort.by("last_name"));
+        List<StaffEntity> entityList = repository.findByLastName(lastName);
         for (StaffEntity entity: entityList) {
             modelList.add(new StaffModel(entity));
         }
-        return modelList;
+        StaffResource resource = new StaffResource();
+        resource.setData(modelList);
+        return resource;
     }
 
 }

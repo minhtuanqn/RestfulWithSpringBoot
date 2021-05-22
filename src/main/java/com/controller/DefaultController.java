@@ -1,10 +1,11 @@
 package com.controller;
 
 import com.model.StaffModel;
+import com.model.StaffResource;
 import com.service.DefaultService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,8 +39,9 @@ public class DefaultController {
 
     /**
      * Handle exception by hibernate validator
+     *
      * @param ex
-     * @return  map contains errors
+     * @return map contains errors
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({MethodArgumentNotValidException.class})
@@ -59,6 +59,7 @@ public class DefaultController {
 
     /**
      * Handle exception for path variable
+     *
      * @param ex
      * @return
      */
@@ -68,7 +69,7 @@ public class DefaultController {
             ConstraintViolationException ex) {
         Map<String, String> errors = new HashMap<>();
         Iterator<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations().iterator();
-        while(constraintViolations.hasNext()) {
+        while (constraintViolations.hasNext()) {
             ConstraintViolation constraintViolation = constraintViolations.next();
             errors.put(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
         }
@@ -77,6 +78,7 @@ public class DefaultController {
 
     /**
      * Create staff
+     *
      * @param staffModel
      * @return response entity contains saved staff
      */
@@ -90,8 +92,9 @@ public class DefaultController {
 
     /**
      * Update staff by id
+     *
      * @param staffModel
-     * @param id of updated staff
+     * @param id         of updated staff
      * @return response entity contains updated staff
      */
     @PutMapping(path = "/{id}",
@@ -101,10 +104,9 @@ public class DefaultController {
                                       @PathVariable @Positive Integer id) {
         staffModel.setId(id);
         boolean isUpdated = defaultService.updateStaff(staffModel);
-        if(isUpdated) {
+        if (isUpdated) {
             return new ResponseEntity<StaffModel>(staffModel, HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<StaffModel>(new StaffModel(), HttpStatus.NO_CONTENT);
         }
     }
@@ -112,6 +114,7 @@ public class DefaultController {
 
     /**
      * Delete staff by id
+     *
      * @param id
      * @return status
      */
@@ -120,16 +123,16 @@ public class DefaultController {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity deleteStaff(@PathVariable @Positive Integer id) {
         boolean isDeleted = defaultService.deleteStaffById(id);
-        if(isDeleted) {
+        if (isDeleted) {
             return new ResponseEntity(HttpStatus.ACCEPTED);
-        }
-        else {
+        } else {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
     }
 
     /**
      * Find staff by id
+     *
      * @param id
      * @return Staff object
      */
@@ -144,40 +147,51 @@ public class DefaultController {
 
     /**
      * Find all existed staff
+     *
      * @return List of staff
      */
     @GetMapping(path = "/all",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<List<StaffModel>> findAll() {
-        List<StaffModel> modelList = defaultService.findAll();
-        return new ResponseEntity<>(modelList, HttpStatus.OK);
+    public ResponseEntity<StaffResource> findAll(@RequestParam("page") Integer page,
+                                                 @RequestParam("perPage") Integer perPage,
+                                                 @RequestParam("sortBy") String typeSort) {
+        StaffResource resource = defaultService.findAll();
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     /**
      * Find existed staff by first name
+     *
      * @param firstName
      * @return list of staff
      */
     @GetMapping(path = "/first-name",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<List<StaffModel>> findByFirstName(@RequestParam("firstName") String firstName) {
-        List<StaffModel> modelList = defaultService.findByFirstName(firstName);
-        return new ResponseEntity<>(modelList, HttpStatus.OK);
+    public ResponseEntity<StaffResource> findByFirstName(@RequestParam("firstName") String firstName,
+                                                         @RequestParam("page") Integer page,
+                                                         @RequestParam("perPage") Integer perPage,
+                                                         @RequestParam("sortBy") String typeSort) {
+        StaffResource resource = defaultService.findByFirstName(firstName);
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     /**
      * Find staff by last name
+     *
      * @param lastName
      * @return list of staff
      */
     @GetMapping(path = "/last-name",
-    consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-    produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<List<StaffModel>> findByLastName(@RequestParam("lastName") String lastName) {
-        List<StaffModel> modelList = defaultService.findByLastName(lastName);
-        return new ResponseEntity<>(modelList, HttpStatus.OK);
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<StaffResource> findByLastName(@RequestParam("lastName") String lastName,
+                                                        @RequestParam("page") Integer page,
+                                                        @RequestParam("perPage") Integer perPage,
+                                                        @RequestParam("sortBy") String typeSort) {
+        StaffResource resource = defaultService.findByLastName(lastName);
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
 }
