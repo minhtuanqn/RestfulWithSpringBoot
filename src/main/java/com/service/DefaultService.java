@@ -6,6 +6,7 @@ import com.model.StaffResource;
 import com.repository.DefaultRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -92,15 +93,21 @@ public class DefaultService {
      * Finding all existed staff
      * @return list of staff
      */
-    public StaffResource findAll() {
+    public StaffResource findAll(Integer page, Integer perPage, String sortBy) {
         List<StaffModel> modelList = new ArrayList<>();
-        Iterator<StaffEntity> entityIterator = repository.findAll().iterator();
+        String typedSort = "first_name";
+        if(typedSort != null) {
+            typedSort = sortBy;
+        }
+        Iterator<StaffEntity> entityIterator = repository.getAll(PageRequest.of(page, perPage, Sort.by(typedSort))).iterator();
         while (entityIterator.hasNext()) {
             StaffEntity entity = entityIterator.next();
             modelList.add(new StaffModel(entity));
         }
         StaffResource resource = new StaffResource();
         resource.setData(modelList);
+        resource.setPage(page);
+        resource.setPerPage(perPage);
         return resource;
     }
 
@@ -109,14 +116,20 @@ public class DefaultService {
      * @param firstName
      * @return list of staff
      */
-    public StaffResource findByFirstName(String firstName) {
+    public StaffResource findByFirstName(String firstName, Integer page, Integer perPage, String sortBy) {
         List<StaffModel> modelList = new ArrayList<>();
-        List<StaffEntity> entityList = repository.findByFirstName(firstName);
+        String typedSort = "firstName";
+        if(typedSort != null) {
+            typedSort = sortBy;
+        }
+        List<StaffEntity> entityList = repository.findByFirstName(firstName, PageRequest.of(page, perPage, Sort.by(typedSort)));
         for (StaffEntity entity : entityList) {
             modelList.add(new StaffModel(entity));
         }
         StaffResource resource = new StaffResource();
         resource.setData(modelList);
+        resource.setPage(page);
+        resource.setPerPage(perPage);
         return resource;
     }
 
@@ -125,14 +138,20 @@ public class DefaultService {
      * @param lastName
      * @return list of staff
      */
-    public StaffResource findByLastName(String lastName) {
+    public StaffResource findByLastName(String lastName, Integer page, Integer perPage, String sortBy) {
         List<StaffModel> modelList = new ArrayList<>();
-        List<StaffEntity> entityList = repository.findByLastName(lastName);
+        String typedSort = "firstName";
+        if(typedSort != null) {
+            typedSort = sortBy;
+        }
+        List<StaffEntity> entityList = repository.findByLastName(lastName,PageRequest.of(page, perPage, Sort.by(typedSort)));
         for (StaffEntity entity: entityList) {
             modelList.add(new StaffModel(entity));
         }
         StaffResource resource = new StaffResource();
         resource.setData(modelList);
+        resource.setPage(page);
+        resource.setPerPage(perPage);
         return resource;
     }
 

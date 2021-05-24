@@ -156,7 +156,7 @@ public class DefaultController {
     public ResponseEntity<StaffResource> findAll(@RequestParam("page") Integer page,
                                                  @RequestParam("perPage") Integer perPage,
                                                  @RequestParam("sortBy") String typeSort) {
-        StaffResource resource = defaultService.findAll();
+        StaffResource resource = defaultService.findAll(page, perPage, typeSort);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
@@ -173,7 +173,7 @@ public class DefaultController {
                                                          @RequestParam("page") Integer page,
                                                          @RequestParam("perPage") Integer perPage,
                                                          @RequestParam("sortBy") String typeSort) {
-        StaffResource resource = defaultService.findByFirstName(firstName);
+        StaffResource resource = defaultService.findByFirstName(firstName, page, perPage, typeSort);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
@@ -190,7 +190,7 @@ public class DefaultController {
                                                         @RequestParam("page") Integer page,
                                                         @RequestParam("perPage") Integer perPage,
                                                         @RequestParam("sortBy") String typeSort) {
-        StaffResource resource = defaultService.findByLastName(lastName);
+        StaffResource resource = defaultService.findByLastName(lastName, page, perPage, typeSort);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
