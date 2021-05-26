@@ -64,8 +64,11 @@ public class DefaultService {
         StaffEntity staffEntity = new StaffEntity(model);
         boolean isExist = checkExistStaff(model.getId());
         if (isExist) {
+            LocalDateTime createAt = repository.findById(model.getId()).get().getCreateAt();
             staffEntity.setUpdateAt(LocalDateTime.now());
+            staffEntity.setCreateAt(createAt);
             repository.save(staffEntity);
+            model.setCreateAt(createAt);
             model.setUpdatedAt(staffEntity.getUpdateAt());
             LOGGER.info("Updated staff with id " + model.getId());
             return true;
@@ -78,15 +81,16 @@ public class DefaultService {
      * Deleting a existed staff
      * @param id
      */
-    public boolean deleteStaffById(Integer id) {
+    public StaffModel deleteStaffById(Integer id) {
         boolean isExist = checkExistStaff(id);
         if(isExist) {
+            StaffEntity existEntity = repository.findById(id).get();
             repository.deleteById(id);
             LOGGER.info("Deleted staff with id: " + id);
-            return true;
+            return new StaffModel(existEntity);
         }
         LOGGER.info("Staff with id does not exist: " + id);
-        return false;
+        return null;
     }
 
     /**

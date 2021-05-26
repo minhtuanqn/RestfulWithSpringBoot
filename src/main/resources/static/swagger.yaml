@@ -10,7 +10,7 @@ info:
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
   version: 1.0.0
 servers:
-  - url: /staff
+  - url: /staffs
 tags:
   - name: Staff
     description: Everything about staff
@@ -140,221 +140,42 @@ paths:
         '204':
           description: Not found
 
-  '/first-name':
+  '/':
     get:
       tags:
         - Staff
-      summary: Find staff by first name
+      summary: Find existed staffs by condition(paging, sorting)
       parameters:
-        - name: firstName
-          in: query
-          description: First name of staff
-          required: true
-          schema:
-            minimum: 1
-            type: integer
         - name: page
           in: query
           description: Number of paging
-          required: true
+          required: false
           schema:
             minimum: 1
             type: integer
         - name: perPage
           in: query
           description: Number of object per page
-          required: true
+          required: false
           schema:
             minimum: 1
             type: integer
         - name: sortBy
           in: query
-          description: Type for sorting
-          required: true
+          description: Type for sorting(sort by selected field)
+          required: false
           schema:
             type: string
-      responses:
-        '200':
-          description: Found staff
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  page:
-                    type: integer
-                    example: 1
-                  perPage:
-                    type: integer
-                    example: 2
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                        firstName:
-                          type: string
-                        lastName:
-                          type: string
-                      example:
-                        - id: 1
-                          firstName: Tuan
-                          lastName: Minh
-                        - id: 2
-                          firstName: Tran
-                          lastName: Quang
-            application/xml:
-              schema:
-                type: object
-                properties:
-                  page:
-                    type: integer
-                    example: 1
-                  perPage:
-                    type: integer
-                    example: 2
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                        firstName:
-                          type: string
-                        lastName:
-                          type: string
-                      example:
-                        - id: 1
-                          firstName: Tuan
-                          lastName: Minh
-                        - id: 2
-                          firstName: Tran
-                          lastName: Quang
-        '405':
-          description: Invalid input
-  '/last-name':
-    get:
-      tags:
-        - Staff
-      summary: Find staff by last name
-      parameters:
-        - name: lastName
+        - name: sortType
           in: query
-          description: Last name of staff
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-        - name: page
-          in: query
-          description: Number of paging
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-        - name: perPage
-          in: query
-          description: Number of object per page
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-        - name: sortBy
-          in: query
-          description: Type for sorting
-          required: true
+          description: descending or ascending
+          required: false
           schema:
             type: string
-      responses:
-        '200':
-          description: Found staff
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  page:
-                    type: integer
-                    example: 1
-                  perPage:
-                    type: integer
-                    example: 2
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                        firstName:
-                          type: string
-                        lastName:
-                          type: string
-                      example:
-                        - id: 1
-                          firstName: Tuan
-                          lastName: Minh
-                        - id: 2
-                          firstName: Tran
-                          lastName: Quang
-            application/xml:
-              schema:
-                type: object
-                properties:
-                  page:
-                    type: integer
-                    example: 1
-                  perPage:
-                    type: integer
-                    example: 2
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                        firstName:
-                          type: string
-                        lastName:
-                          type: string
-                      example:
-                        - id: 1
-                          firstName: Tuan
-                          lastName: Minh
-                        - id: 2
-                          firstName: Tran
-                          lastName: Quang
-        '405':
-          description: Invalid input
-
-  '/all':
-    get:
-      tags:
-        - Staff
-      summary: Find all existed staff
-      parameters:
-        - name: page
+        - name: searchedValue
           in: query
-          description: Number of paging
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-        - name: perPage
-          in: query
-          description: Number of object per page
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-        - name: sortBy
-          in: query
-          description: Type for sorting
-          required: true
+          description: searched value
+          required: false
           schema:
             type: string
       responses:
@@ -422,7 +243,6 @@ paths:
           description: Invalid input
           content: {}
 
-  '/':
     post:
       tags:
         - Staff

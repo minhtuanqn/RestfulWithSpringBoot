@@ -138,11 +138,11 @@ public class DefaultController {
         if(invalidId != null && invalidId.size() > 0) {
             return new ResponseEntity(invalidId, HttpStatus.BAD_REQUEST);
         }
-        boolean isDeleted = defaultService.deleteStaffById(Integer.parseInt(id));
-        if (isDeleted) {
-            return new ResponseEntity(HttpStatus.OK);
+        StaffModel staffModel = defaultService.deleteStaffById(Integer.parseInt(id));
+        if (staffModel != null) {
+            return new ResponseEntity(staffModel, HttpStatus.OK);
         } else {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new StaffModel(), HttpStatus.NOT_FOUND);
         }
     }
 
