@@ -1,5 +1,7 @@
 package com.utils;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ValidatorUtils {
@@ -27,7 +29,7 @@ public class ValidatorUtils {
      * @param number
      * @param numberErr
      * @param fieldName
-     * @return
+     * @return greater than zero or not
      */
     public static boolean checkGreaterThanZero(Integer number, Map<String, String> numberErr, String fieldName) {
         if(number <= 0) {
@@ -35,6 +37,25 @@ public class ValidatorUtils {
             return false;
         }
         return true;
+    }
+
+    /**
+     * check one field is exist in class or not
+     * @param checkedClass
+     * @param fieldName
+     * @param paramName
+     * @return list of error
+     */
+    public static Map<String, String> checkExistFieldOfClass(Class<? extends Object> checkedClass, String fieldName, String paramName) {
+        try {
+            Field field = checkedClass.getDeclaredField(fieldName);
+        }
+        catch (NoSuchFieldException e) {
+            Map<String, String> notExistField = new HashMap<>();
+            notExistField.put(fieldName, "does not exist");
+            return notExistField;
+        }
+        return null;
     }
 
 

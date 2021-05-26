@@ -35,6 +35,8 @@ public class StaffEntity {
         this.id = model.getId();
         this.firstName = model.getFirstName();
         this.lastName = model.getLastName();
+        this.updateAt = model.getUpdatedAt();
+        this.createAt = model.getCreateAt();
     }
 
     public StaffEntity(String firstName, String lastName) {

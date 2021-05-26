@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.entity.StaffEntity;
 import com.model.StaffModel;
 import com.model.StaffResource;
 import com.service.DefaultService;
@@ -16,10 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -212,17 +209,18 @@ public class DefaultController {
         if(bindingErr.size() > 0) {
             return new ResponseEntity(bindingErr, HttpStatus.BAD_REQUEST);
         }
-        else {
-            if(!checkGreaterThanZero(defaultPerPage, bindingErr, "perPage")) {
-                return new ResponseEntity(bindingErr, HttpStatus.BAD_REQUEST);
-            }
+        else if(!checkGreaterThanZero(defaultPerPage, bindingErr, "perPage")) {
+            return new ResponseEntity(bindingErr, HttpStatus.BAD_REQUEST);
         }
 
         if(sortBy != null) {
+            Map<String, String> existError = checkExistFieldOfClass(StaffEntity.class, sortBy, "sortBy");
+            if(existError != null && existError.size() > 0) {
+                return new ResponseEntity(existError, HttpStatus.NOT_FOUND);
+            }
             defaultSortBy = sortBy;
         }
         if(searchedValue != null) {
-            System.out.println(searchedValue);
             defaultSearchedValue = searchedValue;
         }
         if (sortType != null) {
@@ -232,23 +230,6 @@ public class DefaultController {
                 defaultSortBy, defaultSearchedValue, defaultSortType);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
-
-//    /**
-//     * Find all exist staff
-//     * @param page
-//     * @param perPage
-//     * @param typeSort
-//     * @return information of resource
-//     */
-//    @GetMapping(path = "/all",
-//            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-//            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-//    public ResponseEntity<StaffResource> findAll(@RequestParam("page") Integer page,
-//                                                 @RequestParam("perPage") Integer perPage,
-//                                                 @RequestParam("sortBy") String typeSort) {
-//        StaffResource resource = defaultService.findAll(page, perPage, typeSort);
-//        return new ResponseEntity<>(resource, HttpStatus.OK);
-//    }
 
 
 }

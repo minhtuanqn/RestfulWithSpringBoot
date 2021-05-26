@@ -1,7 +1,6 @@
 package com.model;
 
 import com.entity.StaffEntity;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +37,8 @@ public class StaffModel {
         this.id = staffEntity.getId();
         this.firstName = staffEntity.getFirstName();
         this.lastName = staffEntity.getLastName();
+        this.createAt = staffEntity.getCreateAt();
+        this.updatedAt = staffEntity.getUpdateAt();
     }
 
     public StaffModel(String firstName, String lastName) {
