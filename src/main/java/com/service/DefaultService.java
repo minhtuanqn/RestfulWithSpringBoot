@@ -1,19 +1,24 @@
 package com.service;
 
 import com.entity.StaffEntity;
+import com.metamodel.StaffEntity_;
 import com.model.StaffModel;
 import com.model.StaffResource;
 import com.repository.DefaultRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service layer
@@ -39,9 +44,13 @@ public class DefaultService {
      */
     public void createStaff(StaffModel model) {
         StaffEntity entity = new StaffEntity(model);
+        if(entity.getId() != null) {
+            entity.setId(null);
+        }
+        entity.setCreateAt(LocalDateTime.now());
         StaffEntity savedEntity = repository.save(entity);
         model.setId(savedEntity.getId());
-        model.setCreateAt(LocalDateTime.now());
+        model.setCreateAt(savedEntity.getCreateAt());
         LOGGER.info("Created staff with id: " + model.getId());
     }
 
@@ -55,8 +64,9 @@ public class DefaultService {
         StaffEntity staffEntity = new StaffEntity(model);
         boolean isExist = checkExistStaff(model.getId());
         if (isExist) {
+            staffEntity.setUpdateAt(LocalDateTime.now());
             repository.save(staffEntity);
-            model.setUpdatedAt(LocalDateTime.now());
+            model.setUpdatedAt(staffEntity.getUpdateAt());
             LOGGER.info("Updated staff with id " + model.getId());
             return true;
         }
@@ -85,12 +95,19 @@ public class DefaultService {
      * @return staff object
      */
     public StaffModel findById(Integer id) {
-        StaffEntity entity = repository.findById(id).get();
-        return new StaffModel(entity);
+        Optional<StaffEntity> staffOptional = repository.findById(id);
+        if(staffOptional.isPresent()) {
+            StaffEntity entity = staffOptional.get();
+            return new StaffModel(entity);
+        }
+        return null;
     }
 
     /**
      * Finding all existed staff
+     * @param page
+     * @param perPage
+     * @param sortBy
      * @return list of staff
      */
     public StaffResource findAll(Integer page, Integer perPage, String sortBy) {
@@ -111,48 +128,53 @@ public class DefaultService {
         return resource;
     }
 
-    /**
-     * Service for finding staff by first name
-     * @param firstName
-     * @return list of staff
-     */
-    public StaffResource findByFirstName(String firstName, Integer page, Integer perPage, String sortBy) {
-        List<StaffModel> modelList = new ArrayList<>();
-        String typedSort = "firstName";
-        if(typedSort != null) {
-            typedSort = sortBy;
-        }
-        List<StaffEntity> entityList = repository.findByFirstName(firstName, PageRequest.of(page, perPage, Sort.by(typedSort)));
-        for (StaffEntity entity : entityList) {
-            modelList.add(new StaffModel(entity));
-        }
-        StaffResource resource = new StaffResource();
-        resource.setData(modelList);
-        resource.setPage(page);
-        resource.setPerPage(perPage);
-        return resource;
+    private Specification<StaffEntity> containFirstname(String searchedName) {
+        return(root, query, criteriaBuilder) -> {
+            String pattern = "%" + searchedName + "%";
+            return criteriaBuilder.like(root.get(StaffEntity_.FIRSTNAME), pattern);
+        };
+    }
+
+    private Specification<StaffEntity> containLastname(String searchedName) {
+        return(root, query, criteriaBuilder) -> {
+            String pattern = "%" + searchedName + "%";
+            return criteriaBuilder.like(root.get(StaffEntity_.LASTNAME), pattern);
+        };
     }
 
     /**
-     * Service for finding staff by last name
-     * @param lastName
-     * @return list of staff
+     * Search staff list
+     * @param page
+     * @param perPage
+     * @param sortBy
+     * @param searchedName
+     * @param sortType
+     * @return information of staff resource
      */
-    public StaffResource findByLastName(String lastName, Integer page, Integer perPage, String sortBy) {
+    public StaffResource findByLastnameOrFirstname(Integer page, Integer perPage,
+                                     String sortBy, String searchedName, String sortType) {
         List<StaffModel> modelList = new ArrayList<>();
-        String typedSort = "firstName";
-        if(typedSort != null) {
-            typedSort = sortBy;
+        Pageable pageable;
+        if(sortType.equals("dsc")) {
+             pageable = PageRequest.of(page, perPage, Sort.by(sortBy).descending());
         }
-        List<StaffEntity> entityList = repository.findByLastName(lastName,PageRequest.of(page, perPage, Sort.by(typedSort)));
+        else {
+            pageable = PageRequest.of(page, perPage, Sort.by(sortBy).ascending());
+        }
+
+        Page<StaffEntity> entityList = repository.findAll(containFirstname(searchedName)
+                                        .or(containLastname(searchedName)), pageable);
         for (StaffEntity entity: entityList) {
             modelList.add(new StaffModel(entity));
         }
         StaffResource resource = new StaffResource();
         resource.setData(modelList);
+        resource.setTotalPage(entityList.getTotalPages());
+        resource.setTotal((int) entityList.getTotalElements());
         resource.setPage(page);
         resource.setPerPage(perPage);
         return resource;
     }
+
 
 }

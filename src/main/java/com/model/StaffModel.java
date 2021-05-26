@@ -13,19 +13,18 @@ import java.time.LocalDateTime;
  * Staff model
  */
 @Component
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class StaffModel {
 
     private Integer id;
 
-    @Pattern(regexp = "[a-zA-Z]*", message = "Just use character for first name")
-    @NotNull(message = "First name must be not null")
-    @Length(min = 3, max = 50, message = "Length of first name must be from3-50 characters")
+    @Pattern(regexp = "[a-zA-Z]*", message = "{firstname.pattern}")
+    @NotNull(message = "{firstname.null}")
+    @Length(min = 3, max = 50, message = "{firstname.length}")
     private String firstName;
 
-    @Pattern(regexp = "[a-zA-Z]*", message = "Just use character for last name")
-    @NotNull(message = "Last name must be not null")
-    @Length(min = 3, max = 50, message = "Length of last name must be from3-50 characters")
+    @Pattern(regexp = "[a-zA-Z]*", message = "{lastname.pattern}")
+    @NotNull(message = "{lastname.null}")
+    @Length(min = 3, max = 50, message = "{lastname.length}")
     private String lastName;
 
     private LocalDateTime createAt;

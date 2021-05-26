@@ -3,6 +3,7 @@ package com.entity;
 import com.model.StaffModel;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * Staff entity
@@ -20,6 +21,12 @@ public class StaffEntity {
 
     @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "create_at")
+    private LocalDateTime createAt;
+
+    @Column(name = "update_at")
+    private LocalDateTime updateAt;
 
     public StaffEntity() {
     }
@@ -57,5 +64,21 @@ public class StaffEntity {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public LocalDateTime getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(LocalDateTime createAt) {
+        this.createAt = createAt;
+    }
+
+    public LocalDateTime getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(LocalDateTime updateAt) {
+        this.updateAt = updateAt;
     }
 }

@@ -1,0 +1,481 @@
+openapi: 3.0.1
+info:
+  title: Swagger UI Demo
+  description: Swagger UI demo by gpcoder.com
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: contact@gpcoder.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: 1.0.0
+servers:
+  - url: /staff
+tags:
+  - name: Staff
+    description: Everything about staff
+paths:
+  '/{id}':
+    get:
+      tags:
+        - Staff
+      summary: Find staff by id
+      parameters:
+        - name: id
+          in: path
+          description: ID of staff
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+      responses:
+        '200':
+          description: Found staff
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  firstName:
+                    type: string
+                    example: Tuan
+                  lastName:
+                    type: string
+                    example: Minh
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  firstName:
+                    type: string
+                    example: Tuan
+                  lastName:
+                    type: string
+                    example: Minh
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - Staff
+      summary: Delete staff by id
+      parameters:
+        - name: id
+          in: path
+          description: ID od staff
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+      responses:
+        '202':
+          description: Delete staff success
+        '204':
+          description: Not found
+    put:
+      tags:
+        - Staff
+      summary: Update staff by id
+      parameters:
+        - name: id
+          in: path
+          description: ID of staff
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+          application/xml:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+      responses:
+        '202':
+          description: Update staff success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  firstName:
+                    type: string
+                    example: Tuan
+                  lastName:
+                    type: string
+                    example: Minh
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  firstName:
+                    type: string
+                    example: Tuan
+                  lastName:
+                    type: string
+                    example: Minh
+        '204':
+          description: Not found
+
+  '/first-name':
+    get:
+      tags:
+        - Staff
+      summary: Find staff by first name
+      parameters:
+        - name: firstName
+          in: query
+          description: First name of staff
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+        - name: page
+          in: query
+          description: Number of paging
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+        - name: perPage
+          in: query
+          description: Number of object per page
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+        - name: sortBy
+          in: query
+          description: Type for sorting
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Found staff
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    example: 1
+                  perPage:
+                    type: integer
+                    example: 2
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        firstName:
+                          type: string
+                        lastName:
+                          type: string
+                      example:
+                        - id: 1
+                          firstName: Tuan
+                          lastName: Minh
+                        - id: 2
+                          firstName: Tran
+                          lastName: Quang
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    example: 1
+                  perPage:
+                    type: integer
+                    example: 2
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        firstName:
+                          type: string
+                        lastName:
+                          type: string
+                      example:
+                        - id: 1
+                          firstName: Tuan
+                          lastName: Minh
+                        - id: 2
+                          firstName: Tran
+                          lastName: Quang
+        '405':
+          description: Invalid input
+  '/last-name':
+    get:
+      tags:
+        - Staff
+      summary: Find staff by last name
+      parameters:
+        - name: lastName
+          in: query
+          description: Last name of staff
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+        - name: page
+          in: query
+          description: Number of paging
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+        - name: perPage
+          in: query
+          description: Number of object per page
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+        - name: sortBy
+          in: query
+          description: Type for sorting
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Found staff
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    example: 1
+                  perPage:
+                    type: integer
+                    example: 2
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        firstName:
+                          type: string
+                        lastName:
+                          type: string
+                      example:
+                        - id: 1
+                          firstName: Tuan
+                          lastName: Minh
+                        - id: 2
+                          firstName: Tran
+                          lastName: Quang
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    example: 1
+                  perPage:
+                    type: integer
+                    example: 2
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        firstName:
+                          type: string
+                        lastName:
+                          type: string
+                      example:
+                        - id: 1
+                          firstName: Tuan
+                          lastName: Minh
+                        - id: 2
+                          firstName: Tran
+                          lastName: Quang
+        '405':
+          description: Invalid input
+
+  '/all':
+    get:
+      tags:
+        - Staff
+      summary: Find all existed staff
+      parameters:
+        - name: page
+          in: query
+          description: Number of paging
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+        - name: perPage
+          in: query
+          description: Number of object per page
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+        - name: sortBy
+          in: query
+          description: Type for sorting
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Found staff
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    example: 1
+                  perPage:
+                    type: integer
+                    example: 2
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        firstName:
+                          type: string
+                        lastName:
+                          type: string
+                      example:
+                        - id: 1
+                          firstName: Tuan
+                          lastName: Minh
+                        - id: 2
+                          firstName: Tran
+                          lastName: Quang
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    example: 1
+                  perPage:
+                    type: integer
+                    example: 2
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        firstName:
+                          type: string
+                        lastName:
+                          type: string
+                      example:
+                        - id: 1
+                          firstName: Tuan
+                          lastName: Minh
+                        - id: 2
+                          firstName: Tran
+                          lastName: Quang
+
+        '405':
+          description: Invalid input
+          content: {}
+
+  '/':
+    post:
+      tags:
+        - Staff
+      summary: Create new Staff
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+          application/xml:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+      responses:
+        '200':
+          description: Create new staff success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  firstName:
+                    type: string
+                    example: Tuan
+                  lastName:
+                    type: string
+                    example: Minh
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  firstName:
+                    type: string
+                    example: Tuan
+                  lastName:
+                    type: string
+                    example: Minh
+        '405':
+          description: Invalid input
+
+components: {}

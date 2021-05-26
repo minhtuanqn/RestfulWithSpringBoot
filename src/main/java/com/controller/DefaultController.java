@@ -5,7 +5,6 @@ import com.model.StaffResource;
 import com.service.DefaultService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,18 +16,21 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import static com.utils.ValidatorUtils.*;
 
 /**
  * Controller layer
  */
 @RestController
 @Validated
-@RequestMapping(path = "/staff")
+@RequestMapping(path = "/staffs")
 public class DefaultController {
     private DefaultService defaultService;
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultController.class);
@@ -58,7 +60,7 @@ public class DefaultController {
     }
 
     /**
-     * Handle exception for path variable
+     * Handle exception for parametersr
      *
      * @param ex
      * @return
@@ -74,6 +76,15 @@ public class DefaultController {
             errors.put(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
         }
         return errors;
+    }
+
+    private Map<String, String> checkValidId(String id) {
+        Map<String, String> invalidId = new HashMap<>();
+        Integer defaultId = checkNotNegativeIntNumber(id, invalidId, "id");
+        if(defaultId == null) {
+            return invalidId;
+        }
+        return null;
     }
 
     /**
@@ -94,20 +105,24 @@ public class DefaultController {
      * Update staff by id
      *
      * @param staffModel
-     * @param id         of updated staff
+     * @param id of updated staff
      * @return response entity contains updated staff
      */
     @PutMapping(path = "/{id}",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity updateStaff(@Valid @RequestBody StaffModel staffModel,
-                                      @PathVariable @Positive Integer id) {
-        staffModel.setId(id);
+    public ResponseEntity updateStaff(@PathVariable String id,
+                                      @Valid @RequestBody StaffModel staffModel) {
+        Map<String, String> invalidId = checkValidId(id);
+        if(invalidId != null && invalidId.size() > 0) {
+            return new ResponseEntity(invalidId, HttpStatus.BAD_REQUEST);
+        }
+        staffModel.setId(Integer.parseInt(id));
         boolean isUpdated = defaultService.updateStaff(staffModel);
         if (isUpdated) {
             return new ResponseEntity<StaffModel>(staffModel, HttpStatus.OK);
         } else {
-            return new ResponseEntity<StaffModel>(new StaffModel(), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<StaffModel>(new StaffModel(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -121,12 +136,16 @@ public class DefaultController {
     @DeleteMapping(path = "/{id}",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity deleteStaff(@PathVariable @Positive Integer id) {
-        boolean isDeleted = defaultService.deleteStaffById(id);
+    public ResponseEntity deleteStaff(@PathVariable String id) {
+        Map<String, String> invalidId = checkValidId(id);
+        if(invalidId != null && invalidId.size() > 0) {
+            return new ResponseEntity(invalidId, HttpStatus.BAD_REQUEST);
+        }
+        boolean isDeleted = defaultService.deleteStaffById(Integer.parseInt(id));
         if (isDeleted) {
-            return new ResponseEntity(HttpStatus.ACCEPTED);
+            return new ResponseEntity(HttpStatus.OK);
         } else {
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -139,59 +158,97 @@ public class DefaultController {
     @GetMapping(path = "/{id}",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<StaffModel> findById(@PathVariable @Positive Integer id) {
-        StaffModel model = defaultService.findById(id);
-        return new ResponseEntity<StaffModel>(model, HttpStatus.OK);
-    }
+    public ResponseEntity<StaffModel> findById(@PathVariable String id) {
+        Map<String, String> invalidId = checkValidId(id);
+        if(invalidId != null && invalidId.size() > 0) {
+            return new ResponseEntity(invalidId, HttpStatus.BAD_REQUEST);
+        }
+        StaffModel model = defaultService.findById(Integer.parseInt(id));
+        if(model == null) {
+            return new ResponseEntity<>(new StaffModel(), HttpStatus.NOT_FOUND);
+        }
+        else
+        {
+            return new ResponseEntity<StaffModel>(model, HttpStatus.OK);
+        }
 
-
-    /**
-     * Find all existed staff
-     *
-     * @return List of staff
-     */
-    @GetMapping(path = "/all",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<StaffResource> findAll(@RequestParam("page") Integer page,
-                                                 @RequestParam("perPage") Integer perPage,
-                                                 @RequestParam("sortBy") String typeSort) {
-        StaffResource resource = defaultService.findAll(page, perPage, typeSort);
-        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     /**
-     * Find existed staff by first name
-     *
-     * @param firstName
-     * @return list of staff
+     * Find all staff by first name or last name
+     * @param page
+     * @param perPage
+     * @param sortBy
+     * @param searchedValue
+     * @return information of resource
      */
-    @GetMapping(path = "/first-name",
+    @GetMapping(path = "",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<StaffResource> findByFirstName(@RequestParam("firstName") String firstName,
-                                                         @RequestParam("page") Integer page,
-                                                         @RequestParam("perPage") Integer perPage,
-                                                         @RequestParam("sortBy") String typeSort) {
-        StaffResource resource = defaultService.findByFirstName(firstName, page, perPage, typeSort);
+    public ResponseEntity<StaffResource> findByFirstnameOrLastname(
+            @RequestParam(value = "page", required = false) String page,
+            @RequestParam(value = "perPage", required = false) String perPage,
+            @RequestParam(value = "sortBy", required = false) String sortBy,
+            @RequestParam(value = "searchedValue", required = false) String searchedValue,
+            @RequestParam(value = "sortType", required = false) String sortType) {
+        int defaultPage = 0;
+        int defaultPerPage = 10;
+        String defaultSortBy = "firstName";
+        String defaultSearchedValue = "";
+        String defaultSortType = "asc";
+        Map<String, String> bindingErr = new HashMap<>();
+        if(page != null) {
+            Integer tmpPage = checkNotNegativeIntNumber(page, bindingErr, "page");
+            if(tmpPage != null) {
+                defaultPage = tmpPage;
+            }
+        }
+        if(perPage != null) {
+            Integer tmpPerPage = checkNotNegativeIntNumber(perPage, bindingErr, "perPage");
+            if(tmpPerPage != null) {
+                defaultPerPage = tmpPerPage;
+            }
+        }
+        if(bindingErr.size() > 0) {
+            return new ResponseEntity(bindingErr, HttpStatus.BAD_REQUEST);
+        }
+        else {
+            if(!checkGreaterThanZero(defaultPerPage, bindingErr, "perPage")) {
+                return new ResponseEntity(bindingErr, HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        if(sortBy != null) {
+            defaultSortBy = sortBy;
+        }
+        if(searchedValue != null) {
+            System.out.println(searchedValue);
+            defaultSearchedValue = searchedValue;
+        }
+        if (sortType != null) {
+            defaultSortType = sortType;
+        }
+        StaffResource resource = defaultService.findByLastnameOrFirstname(defaultPage, defaultPerPage,
+                defaultSortBy, defaultSearchedValue, defaultSortType);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
-    /**
-     * Find staff by last name
-     *
-     * @param lastName
-     * @return list of staff
-     */
-    @GetMapping(path = "/last-name",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<StaffResource> findByLastName(@RequestParam("lastName") String lastName,
-                                                        @RequestParam("page") Integer page,
-                                                        @RequestParam("perPage") Integer perPage,
-                                                        @RequestParam("sortBy") String typeSort) {
-        StaffResource resource = defaultService.findByLastName(lastName, page, perPage, typeSort);
-        return new ResponseEntity<>(resource, HttpStatus.OK);
-    }
+//    /**
+//     * Find all exist staff
+//     * @param page
+//     * @param perPage
+//     * @param typeSort
+//     * @return information of resource
+//     */
+//    @GetMapping(path = "/all",
+//            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+//            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+//    public ResponseEntity<StaffResource> findAll(@RequestParam("page") Integer page,
+//                                                 @RequestParam("perPage") Integer perPage,
+//                                                 @RequestParam("sortBy") String typeSort) {
+//        StaffResource resource = defaultService.findAll(page, perPage, typeSort);
+//        return new ResponseEntity<>(resource, HttpStatus.OK);
+//    }
+
 
 }

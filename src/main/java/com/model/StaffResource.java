@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+/**
+ * Model for staff resource
+ */
 public class StaffResource {
-    int page;
-    int totalPage;
-    int perPage;
-    int total;
-    List<StaffModel> data;
+    private int page;
+    private int totalPage;
+    private int perPage;
+    private int total;
+    private List<StaffModel> data;
 
     public List<StaffModel> getData() {
         return data;
