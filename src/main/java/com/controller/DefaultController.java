@@ -14,11 +14,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import static com.utils.ValidatorUtils.*;
 
@@ -53,27 +50,26 @@ public class DefaultController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
-
     }
 
-    /**
-     * Handle exception for parametersr
-     *
-     * @param ex
-     * @return
-     */
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ConstraintViolationException.class})
-    public Map<String, String> handleValidationExceptions(
-            ConstraintViolationException ex) {
-        Map<String, String> errors = new HashMap<>();
-        Iterator<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations().iterator();
-        while (constraintViolations.hasNext()) {
-            ConstraintViolation constraintViolation = constraintViolations.next();
-            errors.put(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
-        }
-        return errors;
-    }
+//    /**
+//     * Handle exception for parameter
+//     *
+//     * @param ex
+//     * @return
+//     */
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ExceptionHandler({ConstraintViolationException.class})
+//    public Map<String, String> handleValidationExceptions(
+//            ConstraintViolationException ex) {
+//        Map<String, String> errors = new HashMap<>();
+//        Iterator<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations().iterator();
+//        while (constraintViolations.hasNext()) {
+//            ConstraintViolation constraintViolation = constraintViolations.next();
+//            errors.put(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
+//        }
+//        return errors;
+//    }
 
     private Map<String, String> checkValidId(String id) {
         Map<String, String> invalidId = new HashMap<>();
@@ -94,8 +90,8 @@ public class DefaultController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<StaffModel> saveStaff(@Valid @RequestBody StaffModel staffModel) {
-        defaultService.createStaff(staffModel);
-        return new ResponseEntity<StaffModel>(staffModel, HttpStatus.OK);
+        StaffModel responseModel = defaultService.createStaff(staffModel);
+        return new ResponseEntity<StaffModel>(responseModel, HttpStatus.OK);
     }
 
     /**
@@ -114,10 +110,9 @@ public class DefaultController {
         if(invalidId != null && invalidId.size() > 0) {
             return new ResponseEntity(invalidId, HttpStatus.BAD_REQUEST);
         }
-        staffModel.setId(Integer.parseInt(id));
-        boolean isUpdated = defaultService.updateStaff(staffModel);
-        if (isUpdated) {
-            return new ResponseEntity<StaffModel>(staffModel, HttpStatus.OK);
+        StaffModel responseModel = defaultService.updateStaff(staffModel);
+        if (responseModel != null) {
+            return new ResponseEntity<StaffModel>(responseModel, HttpStatus.OK);
         } else {
             return new ResponseEntity<StaffModel>(new StaffModel(), HttpStatus.NOT_FOUND);
         }

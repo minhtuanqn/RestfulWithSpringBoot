@@ -1,6 +1,10 @@
 package com.model;
 
 import com.entity.StaffEntity;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +30,12 @@ public class StaffModel {
     @Length(min = 3, max = 50, message = "{lastname.length}")
     private String lastName;
 
+    @JsonSerialize(using = ToStringSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime createAt;
 
+    @JsonSerialize(using = ToStringSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime updatedAt;
 
     public StaffModel() {

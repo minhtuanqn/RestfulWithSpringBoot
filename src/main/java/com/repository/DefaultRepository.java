@@ -13,12 +13,4 @@ import java.util.List;
  */
 public interface DefaultRepository extends CrudRepository<StaffEntity, Integer>, JpaSpecificationExecutor<StaffEntity> {
 
-    /**
-     * Get all staff
-     * @param pageable
-     * @return
-     */
-    @Query(value = "select id, first_name, last_name from Staff", nativeQuery = true)
-    List<StaffEntity>  getAll(Pageable pageable);
-
 }
