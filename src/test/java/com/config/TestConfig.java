@@ -1,10 +1,14 @@
 package com.config;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import com.RestfullWithSpringBootApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.*;
 
+@EnableAutoConfiguration
 @Configuration
+@ComponentScan(basePackageClasses = {RestfullWithSpringBootApplication.class})
 @Profile("test")
 public class TestConfig {
+
 
 }

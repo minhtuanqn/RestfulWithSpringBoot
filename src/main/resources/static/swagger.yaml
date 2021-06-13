@@ -10,85 +10,18 @@ info:
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
   version: 1.0.0
 servers:
-  - url: /staffs
+  - url: http://localhost:8080
 tags:
   - name: Staff
     description: Everything about staff
 paths:
-  '/{id}':
-    get:
+  '/staffs/':
+    post:
       tags:
         - Staff
-      summary: Find staff by id
-      parameters:
-        - name: id
-          in: path
-          description: ID of staff
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-      responses:
-        '200':
-          description: Found staff
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    example: 1
-                  firstName:
-                    type: string
-                    example: Tuan
-                  lastName:
-                    type: string
-                    example: Minh
-            application/xml:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    example: 1
-                  firstName:
-                    type: string
-                    example: Tuan
-                  lastName:
-                    type: string
-                    example: Minh
-        '405':
-          description: Invalid input
-    delete:
-      tags:
-        - Staff
-      summary: Delete staff by id
-      parameters:
-        - name: id
-          in: path
-          description: ID od staff
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-      responses:
-        '202':
-          description: Delete staff success
-        '204':
-          description: Not found
-    put:
-      tags:
-        - Staff
-      summary: Update staff by id
-      parameters:
-        - name: id
-          in: path
-          description: ID of staff
-          required: true
-          schema:
-            minimum: 1
-            type: integer
+      summary: Create new Staff
+      security:
+        - BasicAuth: []
       requestBody:
         content:
           application/json:
@@ -108,8 +41,8 @@ paths:
                 lastName:
                   type: string
       responses:
-        '202':
-          description: Update staff success
+        '200':
+          description: Create new staff success
           content:
             application/json:
               schema:
@@ -124,6 +57,12 @@ paths:
                   lastName:
                     type: string
                     example: Minh
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updatedAt:
+                    type: object
+                    example: null
             application/xml:
               schema:
                 type: object
@@ -137,21 +76,29 @@ paths:
                   lastName:
                     type: string
                     example: Minh
-        '204':
-          description: Not found
-
-  '/':
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updatedAt:
+                    type: object
+                    example: null
+        '400':
+          description: Invalid input
+        '403':
+          description: Forbidden Error
     get:
       tags:
         - Staff
       summary: Find existed staffs by condition(paging, sorting)
+      security:
+        - BasicAuth: []
       parameters:
         - name: page
           in: query
           description: Number of paging
           required: false
           schema:
-            minimum: 1
+            minimum: 0
             type: integer
         - name: perPage
           in: query
@@ -162,7 +109,7 @@ paths:
             type: integer
         - name: sortBy
           in: query
-          description: Type for sorting(sort by selected field)
+          description: Type for sorting
           required: false
           schema:
             type: string
@@ -203,13 +150,21 @@ paths:
                           type: string
                         lastName:
                           type: string
+                        createAt:
+                          type: object
+                        updatedAt:
+                          type: object
                       example:
                         - id: 1
                           firstName: Tuan
                           lastName: Minh
+                          createAt: "2021-06-10T15:37:24.122193"
+                          updatedAt:
                         - id: 2
                           firstName: Tran
                           lastName: Quang
+                          createAt: "2021-06-10T15:37:24.122193"
+                          updatedAt: "2021-06-10T15:37:24.122193"
             application/xml:
               schema:
                 type: object
@@ -235,18 +190,156 @@ paths:
                         - id: 1
                           firstName: Tuan
                           lastName: Minh
+                          createAt: "2021-06-10T15:37:24.122193"
+                          updatedAt:
                         - id: 2
                           firstName: Tran
                           lastName: Quang
+                          createAt: "2021-06-10T15:37:24.122193"
+                          updatedAt: "2021-06-10T15:37:24.122193"
 
-        '405':
+        '400':
           description: Invalid input
           content: {}
+        '403':
+          description: Forbidden Error
 
-    post:
+  '/staffs/{id}':
+    get:
       tags:
         - Staff
-      summary: Create new Staff
+      summary: Find staff by id
+      security:
+        - BasicAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of staff
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+      responses:
+        '200':
+          description: Found staff
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  firstName:
+                    type: string
+                    example: Tuan
+                  lastName:
+                    type: string
+                    example: Minh
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updatedAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.678193"
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  firstName:
+                    type: string
+                    example: Tuan
+                  lastName:
+                    type: string
+                    example: Minh
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updatedAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.678193"
+        '400':
+          description: Invalid input
+        '403':
+          description: Forbidden Error
+    delete:
+      tags:
+        - Staff
+      summary: Delete staff by id
+      security:
+        - BasicAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID od staff
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+      responses:
+        '200':
+          description: Delete staff success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  firstName:
+                    type: string
+                    example: Tuan
+                  lastName:
+                    type: string
+                    example: Minh
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updatedAt:
+                    type: object
+                    example: null
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  firstName:
+                    type: string
+                    example: Tuan
+                  lastName:
+                    type: string
+                    example: Minh
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updatedAt:
+                    type: object
+                    example: null
+
+        '404':
+          description: Not found
+        '403':
+          description: Forbidden Error
+    put:
+      tags:
+        - Staff
+      summary: Update staff by id
+      security:
+        - BasicAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of staff
+          required: true
+          schema:
+            minimum: 1
+            type: integer
       requestBody:
         content:
           application/json:
@@ -267,7 +360,7 @@ paths:
                   type: string
       responses:
         '200':
-          description: Create new staff success
+          description: Update staff success
           content:
             application/json:
               schema:
@@ -282,6 +375,12 @@ paths:
                   lastName:
                     type: string
                     example: Minh
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updatedAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.678193"
             application/xml:
               schema:
                 type: object
@@ -295,7 +394,13 @@ paths:
                   lastName:
                     type: string
                     example: Minh
-        '405':
-          description: Invalid input
+        '404':
+          description: Not found
+        '403':
+          description: Forbidden Error
 
-components: {}
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

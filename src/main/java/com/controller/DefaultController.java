@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+
 import static com.utils.ValidatorUtils.*;
 
 /**
@@ -74,7 +75,7 @@ public class DefaultController {
     private Map<String, String> checkValidId(String id) {
         Map<String, String> invalidId = new HashMap<>();
         Integer defaultId = checkNotNegativeIntNumber(id, invalidId, "id");
-        if(defaultId == null) {
+        if (defaultId == null) {
             return invalidId;
         }
         return null;
@@ -87,7 +88,6 @@ public class DefaultController {
      * @return response entity contains saved staff
      */
     @PostMapping(path = "",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<StaffModel> saveStaff(@Valid @RequestBody StaffModel staffModel) {
         StaffModel responseModel = defaultService.createStaff(staffModel);
@@ -98,18 +98,18 @@ public class DefaultController {
      * Update staff by id
      *
      * @param staffModel
-     * @param id of updated staff
+     * @param id         of updated staff
      * @return response entity contains updated staff
      */
     @PutMapping(path = "/{id}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity updateStaff(@PathVariable String id,
                                       @Valid @RequestBody StaffModel staffModel) {
         Map<String, String> invalidId = checkValidId(id);
-        if(invalidId != null && invalidId.size() > 0) {
+        if (invalidId != null && invalidId.size() > 0) {
             return new ResponseEntity(invalidId, HttpStatus.BAD_REQUEST);
         }
+        staffModel.setId(Integer.parseInt(id));
         StaffModel responseModel = defaultService.updateStaff(staffModel);
         if (responseModel != null) {
             return new ResponseEntity<StaffModel>(responseModel, HttpStatus.OK);
@@ -126,18 +126,17 @@ public class DefaultController {
      * @return status
      */
     @DeleteMapping(path = "/{id}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity deleteStaff(@PathVariable String id) {
+    public ResponseEntity<Object> deleteStaff(@PathVariable String id) {
         Map<String, String> invalidId = checkValidId(id);
-        if(invalidId != null && invalidId.size() > 0) {
-            return new ResponseEntity(invalidId, HttpStatus.BAD_REQUEST);
+        if (invalidId != null && invalidId.size() > 0) {
+            return new ResponseEntity<>(invalidId, HttpStatus.BAD_REQUEST);
         }
         StaffModel staffModel = defaultService.deleteStaffById(Integer.parseInt(id));
         if (staffModel != null) {
-            return new ResponseEntity(staffModel, HttpStatus.OK);
+            return new ResponseEntity<>(staffModel, HttpStatus.OK);
         } else {
-            return new ResponseEntity(new StaffModel(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new StaffModel(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -148,19 +147,16 @@ public class DefaultController {
      * @return Staff object
      */
     @GetMapping(path = "/{id}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<StaffModel> findById(@PathVariable String id) {
         Map<String, String> invalidId = checkValidId(id);
-        if(invalidId != null && invalidId.size() > 0) {
+        if (invalidId != null && invalidId.size() > 0) {
             return new ResponseEntity(invalidId, HttpStatus.BAD_REQUEST);
         }
         StaffModel model = defaultService.findById(Integer.parseInt(id));
-        if(model == null) {
+        if (model == null) {
             return new ResponseEntity<>(new StaffModel(), HttpStatus.NOT_FOUND);
-        }
-        else
-        {
+        } else {
             return new ResponseEntity<StaffModel>(model, HttpStatus.OK);
         }
 
@@ -168,6 +164,7 @@ public class DefaultController {
 
     /**
      * Find all staff by first name or last name
+     *
      * @param page
      * @param perPage
      * @param sortBy
@@ -175,7 +172,6 @@ public class DefaultController {
      * @return information of resource
      */
     @GetMapping(path = "",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<StaffResource> findByFirstnameOrLastname(
             @RequestParam(value = "page", required = false) String page,
@@ -189,33 +185,32 @@ public class DefaultController {
         String defaultSearchedValue = "";
         String defaultSortType = "asc";
         Map<String, String> bindingErr = new HashMap<>();
-        if(page != null) {
+        if (page != null) {
             Integer tmpPage = checkNotNegativeIntNumber(page, bindingErr, "page");
-            if(tmpPage != null) {
+            if (tmpPage != null) {
                 defaultPage = tmpPage;
             }
         }
-        if(perPage != null) {
+        if (perPage != null) {
             Integer tmpPerPage = checkNotNegativeIntNumber(perPage, bindingErr, "perPage");
-            if(tmpPerPage != null) {
+            if (tmpPerPage != null) {
                 defaultPerPage = tmpPerPage;
             }
         }
-        if(bindingErr.size() > 0) {
+        if (bindingErr.size() > 0) {
             return new ResponseEntity(bindingErr, HttpStatus.BAD_REQUEST);
-        }
-        else if(!checkGreaterThanZero(defaultPerPage, bindingErr, "perPage")) {
+        } else if (!checkGreaterThanZero(defaultPerPage, bindingErr, "perPage")) {
             return new ResponseEntity(bindingErr, HttpStatus.BAD_REQUEST);
         }
 
-        if(sortBy != null) {
+        if (sortBy != null) {
             Map<String, String> existError = checkExistFieldOfClass(StaffEntity.class, sortBy, "sortBy");
-            if(existError != null && existError.size() > 0) {
+            if (existError != null && existError.size() > 0) {
                 return new ResponseEntity(existError, HttpStatus.NOT_FOUND);
             }
             defaultSortBy = sortBy;
         }
-        if(searchedValue != null) {
+        if (searchedValue != null) {
             defaultSearchedValue = searchedValue;
         }
         if (sortType != null) {
