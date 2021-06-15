@@ -14,8 +14,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import static com.utils.ValidatorUtils.*;
@@ -53,33 +57,25 @@ public class DefaultController {
         return errors;
     }
 
-//    /**
-//     * Handle exception for parameter
-//     *
-//     * @param ex
-//     * @return
-//     */
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    @ExceptionHandler({ConstraintViolationException.class})
-//    public Map<String, String> handleValidationExceptions(
-//            ConstraintViolationException ex) {
-//        Map<String, String> errors = new HashMap<>();
-//        Iterator<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations().iterator();
-//        while (constraintViolations.hasNext()) {
-//            ConstraintViolation constraintViolation = constraintViolations.next();
-//            errors.put(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
-//        }
-//        return errors;
-//    }
-
-    private Map<String, String> checkValidId(String id) {
-        Map<String, String> invalidId = new HashMap<>();
-        Integer defaultId = checkNotNegativeIntNumber(id, invalidId, "id");
-        if (defaultId == null) {
-            return invalidId;
+    /**
+     * Handle exception for parameter
+     *
+     * @param ex
+     * @return
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ConstraintViolationException.class})
+    public Map<String, String> handleValidationExceptions(
+            ConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+        Iterator<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations().iterator();
+        while (constraintViolations.hasNext()) {
+            ConstraintViolation<?> constraintViolation = constraintViolations.next();
+            errors.put(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
         }
-        return null;
+        return errors;
     }
+
 
     /**
      * Create staff
@@ -91,7 +87,7 @@ public class DefaultController {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<StaffModel> saveStaff(@Valid @RequestBody StaffModel staffModel) {
         StaffModel responseModel = defaultService.createStaff(staffModel);
-        return new ResponseEntity<StaffModel>(responseModel, HttpStatus.OK);
+        return new ResponseEntity<>(responseModel, HttpStatus.OK);
     }
 
     /**
@@ -103,19 +99,13 @@ public class DefaultController {
      */
     @PutMapping(path = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity updateStaff(@PathVariable String id,
+    public ResponseEntity<Object> updateStaff(@PathVariable @Min(0) int id,
                                       @Valid @RequestBody StaffModel staffModel) {
-        Map<String, String> invalidId = checkValidId(id);
-        if (invalidId != null && invalidId.size() > 0) {
-            return new ResponseEntity(invalidId, HttpStatus.BAD_REQUEST);
-        }
-        staffModel.setId(Integer.parseInt(id));
         StaffModel responseModel = defaultService.updateStaff(staffModel);
-        if (responseModel != null) {
-            return new ResponseEntity<StaffModel>(responseModel, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<StaffModel>(new StaffModel(), HttpStatus.NOT_FOUND);
+        if (responseModel == null) {
+            return new ResponseEntity<>(new StaffModel(), HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(responseModel, HttpStatus.OK);
     }
 
 
@@ -127,17 +117,12 @@ public class DefaultController {
      */
     @DeleteMapping(path = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Object> deleteStaff(@PathVariable String id) {
-        Map<String, String> invalidId = checkValidId(id);
-        if (invalidId != null && invalidId.size() > 0) {
-            return new ResponseEntity<>(invalidId, HttpStatus.BAD_REQUEST);
-        }
-        StaffModel staffModel = defaultService.deleteStaffById(Integer.parseInt(id));
-        if (staffModel != null) {
-            return new ResponseEntity<>(staffModel, HttpStatus.OK);
-        } else {
+    public ResponseEntity<Object> deleteStaff(@PathVariable @Min(0) int id) {
+        StaffModel staffModel = defaultService.deleteStaffById(id);
+        if (staffModel == null) {
             return new ResponseEntity<>(new StaffModel(), HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(staffModel, HttpStatus.OK);
     }
 
     /**
@@ -148,17 +133,12 @@ public class DefaultController {
      */
     @GetMapping(path = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<StaffModel> findById(@PathVariable String id) {
-        Map<String, String> invalidId = checkValidId(id);
-        if (invalidId != null && invalidId.size() > 0) {
-            return new ResponseEntity(invalidId, HttpStatus.BAD_REQUEST);
-        }
-        StaffModel model = defaultService.findById(Integer.parseInt(id));
+    public ResponseEntity<Object> findById(@PathVariable @Min(0) int id) {
+        StaffModel model = defaultService.findById(id);
         if (model == null) {
             return new ResponseEntity<>(new StaffModel(), HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<StaffModel>(model, HttpStatus.OK);
         }
+        return new ResponseEntity<>(model, HttpStatus.OK);
 
     }
 
@@ -173,51 +153,17 @@ public class DefaultController {
      */
     @GetMapping(path = "",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<StaffResource> findByFirstnameOrLastname(
-            @RequestParam(value = "page", required = false) String page,
-            @RequestParam(value = "perPage", required = false) String perPage,
-            @RequestParam(value = "sortBy", required = false) String sortBy,
-            @RequestParam(value = "searchedValue", required = false) String searchedValue,
-            @RequestParam(value = "sortType", required = false) String sortType) {
-        int defaultPage = 0;
-        int defaultPerPage = 10;
-        String defaultSortBy = "firstName";
-        String defaultSearchedValue = "";
-        String defaultSortType = "asc";
-        Map<String, String> bindingErr = new HashMap<>();
-        if (page != null) {
-            Integer tmpPage = checkNotNegativeIntNumber(page, bindingErr, "page");
-            if (tmpPage != null) {
-                defaultPage = tmpPage;
-            }
+    public ResponseEntity<Object> findByFirstnameOrLastname(
+            @Valid @RequestParam(value = "page", required = false, defaultValue = "0") @Min(0) Integer page,
+            @Valid @RequestParam(value = "perPage", required = false, defaultValue = "10") @Min(1) Integer perPage,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "firstName") String sortBy,
+            @RequestParam(value = "searchedValue", required = false, defaultValue = "") String searchedValue,
+            @RequestParam(value = "sortType", required = false, defaultValue = "asc") String sortType) {
+        Map<String, String> existError = checkExistFieldOfClass(StaffEntity.class, sortBy, "sortBy");
+        if (existError != null && existError.size() > 0) {
+            return new ResponseEntity<>(existError, HttpStatus.NOT_FOUND);
         }
-        if (perPage != null) {
-            Integer tmpPerPage = checkNotNegativeIntNumber(perPage, bindingErr, "perPage");
-            if (tmpPerPage != null) {
-                defaultPerPage = tmpPerPage;
-            }
-        }
-        if (bindingErr.size() > 0) {
-            return new ResponseEntity(bindingErr, HttpStatus.BAD_REQUEST);
-        } else if (!checkGreaterThanZero(defaultPerPage, bindingErr, "perPage")) {
-            return new ResponseEntity(bindingErr, HttpStatus.BAD_REQUEST);
-        }
-
-        if (sortBy != null) {
-            Map<String, String> existError = checkExistFieldOfClass(StaffEntity.class, sortBy, "sortBy");
-            if (existError != null && existError.size() > 0) {
-                return new ResponseEntity(existError, HttpStatus.NOT_FOUND);
-            }
-            defaultSortBy = sortBy;
-        }
-        if (searchedValue != null) {
-            defaultSearchedValue = searchedValue;
-        }
-        if (sortType != null) {
-            defaultSortType = sortType;
-        }
-        StaffResource resource = defaultService.findByLastnameOrFirstname(defaultPage, defaultPerPage,
-                defaultSortBy, defaultSearchedValue, defaultSortType);
+        StaffResource resource = defaultService.findByLastnameOrFirstname(page, perPage, sortBy, searchedValue, sortType);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
