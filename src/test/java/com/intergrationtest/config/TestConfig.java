@@ -1,4 +1,4 @@
-package com.config;
+package com.intergrationtest.config;
 
 import com.RestfullWithSpringBootApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

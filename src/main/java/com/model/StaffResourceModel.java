@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Model for staff resource
  */
-public class StaffResource {
+public class StaffResourceModel {
     private int page;
     private int totalPage;
     private int perPage;

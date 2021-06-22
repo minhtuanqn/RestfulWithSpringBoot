@@ -1,7 +1,8 @@
 package com.utils;
 
+import com.model.DepartmentModel;
 import com.model.StaffModel;
-import com.model.StaffResource;
+import com.model.StaffResourceModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -15,7 +16,15 @@ public class TestsUtils {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("firstName", "firstName");
         jsonObject.put("lastName", "lastName");
+        jsonObject.put("username", "username");
+        jsonObject.put("password", "password");
         jsonObject.put("id", 1);
+        return jsonObject;
+    }
+
+    public static JSONObject createDepJsonObject() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", "name");
         return jsonObject;
     }
 
@@ -23,18 +32,29 @@ public class TestsUtils {
         return LocalDateTime.of(2015, Month.JULY, 29, 19, 30, 40);
     }
 
+    public static DepartmentModel createDepartmentModel() {
+        DepartmentModel departmentModel = new DepartmentModel();
+        departmentModel.setId(1);
+        departmentModel.setName("name");
+        departmentModel.setCreateAt(createMockTime());
+        departmentModel.setUpdateAt(createMockTime());
+        return departmentModel;
+    }
+
     public static StaffModel createStaffModel() {
         StaffModel staffModel = new StaffModel();
         staffModel.setFirstName("firstName");
         staffModel.setLastName("lastName");
+        staffModel.setUsername("username");
+        staffModel.setPassword("password");
         staffModel.setId(1);
         staffModel.setCreateAt(createMockTime());
         staffModel.setUpdatedAt(createMockTime());
         return staffModel;
     }
 
-    public static StaffResource createStaffResource(int total, int page, int perPage, int totalPage, List<StaffModel> modelList) {
-        StaffResource staffResource = new StaffResource();
+    public static StaffResourceModel createStaffResource(int total, int page, int perPage, int totalPage, List<StaffModel> modelList) {
+        StaffResourceModel staffResource = new StaffResourceModel();
         staffResource.setTotal(total);
         staffResource.setPage(page);
         staffResource.setPerPage(perPage);
@@ -43,16 +63,26 @@ public class TestsUtils {
         return staffResource;
     }
 
+    public static boolean compareTwoDepartment(DepartmentModel expect, DepartmentModel actual) {
+        if(expect == null) {
+            Assertions.assertEquals(expect, actual);
+        }
+        else {
+            Assertions.assertEquals(expect.getId(), actual.getId());
+            Assertions.assertEquals(expect.getName(), actual.getName());
+        }
+        return true;
+    }
+
     public static boolean compareTwoStaff(StaffModel expected, StaffModel actual) {
         Assertions.assertEquals(expected.getId(), actual.getId());
         Assertions.assertEquals(expected.getFirstName(), expected.getFirstName());
         Assertions.assertEquals(expected.getLastName(), actual.getLastName());
-        Assertions.assertEquals(expected.getCreateAt(), actual.getCreateAt());
-        Assertions.assertEquals(expected.getUpdatedAt(),actual.getUpdatedAt());
+        compareTwoDepartment(expected.getDepartmentModel(), actual.getDepartmentModel());
         return true;
     }
 
-    public static boolean compareTwoResource(StaffResource expected, StaffResource actual) {
+    public static boolean compareTwoResource(StaffResourceModel expected, StaffResourceModel actual) {
         Assertions.assertEquals(expected.getPage(), actual.getPage());
         Assertions.assertEquals(expected.getPerPage(), actual.getPerPage());
         Assertions.assertEquals(expected.getTotal(), actual.getTotal());
@@ -65,5 +95,6 @@ public class TestsUtils {
         }
         return true;
     }
+
 
 }
