@@ -43,19 +43,18 @@ public class ValidatorUtils {
      * check one field is exist in class or not
      * @param checkedClass
      * @param fieldName
-     * @param paramName
      * @return list of error
      */
-    public static Map<String, String> checkExistFieldOfClass(Class<? extends Object> checkedClass, String fieldName, String paramName) {
+    public static boolean checkExistFieldOfClass(Class<? extends Object> checkedClass, String fieldName) {
         try {
             Field field = checkedClass.getDeclaredField(fieldName);
         }
         catch (NoSuchFieldException e) {
             Map<String, String> notExistField = new HashMap<>();
             notExistField.put(fieldName, "does not exist");
-            return notExistField;
+            return false;
         }
-        return null;
+        return true;
     }
 
 

@@ -106,10 +106,7 @@ public class StaffController {
     public ResponseEntity<Object> findByFirstnameOrLastname(
             @RequestParam(value = "searchedValue", required = false, defaultValue = "") String searchedValue,
             @Pagination Pagination pagination) {
-        Map<String, String> existError = checkExistFieldOfClass(StaffEntity.class, pagination.sortBy(), "sortBy");
-        if (existError != null && existError.size() > 0) {
-            return new ResponseEntity<>(existError, HttpStatus.BAD_REQUEST);
-        }
+
         StaffResourceModel resource = staffService.findByLastnameOrFirstname(pagination, searchedValue);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }

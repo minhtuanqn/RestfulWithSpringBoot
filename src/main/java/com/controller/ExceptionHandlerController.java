@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.customexception.DuplicatedEntityByUniqueIdentityException;
+import com.customexception.NoSuchFieldSortByOfClassException;
 import com.model.APIErrorModel;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.BeanExpressionException;
@@ -203,6 +204,20 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
             DuplicatedEntityByUniqueIdentityException ex) {
         initMap();
         invalidMap.put("Duplicated unique identity exception", ex.getMessage());
+        APIErrorModel apiErrorModel = new APIErrorModel(LocalDateTime.now(), HttpStatus.BAD_REQUEST.name(), invalidMap);
+        return new ResponseEntity<>(apiErrorModel, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handle exist unique identity exception
+     * @param ex
+     * @return response entity
+     */
+    @ExceptionHandler({NoSuchFieldSortByOfClassException.class})
+    public ResponseEntity<Object> handleNoSuchFieldSortByOfClassException(
+            NoSuchFieldSortByOfClassException ex) {
+        initMap();
+        invalidMap.put("No such sort type exception", ex.getMessage());
         APIErrorModel apiErrorModel = new APIErrorModel(LocalDateTime.now(), HttpStatus.BAD_REQUEST.name(), invalidMap);
         return new ResponseEntity<>(apiErrorModel, HttpStatus.BAD_REQUEST);
     }

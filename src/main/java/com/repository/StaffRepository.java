@@ -25,9 +25,4 @@ public interface StaffRepository extends CrudRepository<StaffEntity, Integer>, J
 
     boolean existsStaffEntityByIdNotAndUsernameEquals(Integer id, String username);
 
-//    @Query(value = "SELECT * FROM staff s WHERE " +
-//            "EXISTS (SELECT id FROM department d WHERE d.id = s.dep_id " +
-//            " AND (s.first_name like :searchedValue or s.last_name like :searchedValue) " +
-//            " and d.delete_at = null and s.delete_at = null)", nativeQuery = true)
-//    Page<StaffEntity> searchExistLikeFirstNameAndLastName(@Param("searchedValue") String searchValue);
 }

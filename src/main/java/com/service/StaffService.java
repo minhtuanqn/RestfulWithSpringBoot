@@ -20,6 +20,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.ListJoin;
+import javax.persistence.criteria.Predicate;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -163,6 +166,20 @@ public class StaffService {
         };
     }
 
+    private Specification<StaffEntity> containsNullDeleteAt() {
+        return (root, query, criteriaBuilder) -> {
+            return criteriaBuilder.isNull(root.get(StaffEntity_.DELETE_AT));
+        };
+    }
+
+    private static Specification<StaffEntity> containsNullDeleteAtOfDepId() {
+        return (root, query, criteriaBuilder) -> {
+            Join<StaffEntity, DepartmentEntity> staffJoins = root.join(StaffEntity_.DEP_ID);
+            Predicate equalPredicate = criteriaBuilder.isNull(staffJoins.get(DepartmentEntity_.DELETE_AT));
+            query.distinct(true);
+            return equalPredicate;
+        };
+    }
 
     /**
      * Search staff list by first name or last name
@@ -177,8 +194,9 @@ public class StaffService {
         Pageable pageable = covertToPageable(pagination);
 
         //Find data in DB
-        Page<StaffEntity> entityPage = repository.findAll(containFirstname(searchedName)
-                .or(containLastname(searchedName)), pageable);
+        Page<StaffEntity> entityPage = repository.findAll(containFirstname(searchedName).and(containsNullDeleteAt()).and(containsNullDeleteAtOfDepId())
+                .or(containLastname(searchedName).and(containsNullDeleteAt().and(containsNullDeleteAtOfDepId()))), pageable);
+
         List<StaffEntity> entityList = entityPage.toList();
         for (StaffEntity entity : entityList) {
             modelList.add(new StaffModel(entity, new DepartmentModel(entity.getDepartmentEntity())));

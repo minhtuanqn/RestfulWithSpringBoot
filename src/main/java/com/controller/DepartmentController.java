@@ -88,12 +88,8 @@ public class DepartmentController {
     @GetMapping(path = "/{id}/staffs", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Object> getStaffsByDepartmentId(
             @PathVariable @Min(0) Integer id,
-            @Pagination Pagination pagination
-    )  {
-        Map<String, String> existError = checkExistFieldOfClass(StaffEntity.class, pagination.sortBy(), "sortBy");
-        if (existError != null && existError.size() > 0) {
-            return new ResponseEntity<>(existError, HttpStatus.BAD_REQUEST);
-        }
+            @Pagination Pagination pagination)  {
+
         StaffResourceModel resourceModel = departmentService.findAllStaffByDepartmentId(id, pagination);
         return new ResponseEntity<>(resourceModel, HttpStatus.OK);
     }

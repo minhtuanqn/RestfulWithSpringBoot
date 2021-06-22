@@ -37,18 +37,9 @@ public class PaginationResolver implements HandlerMethodArgumentResolver {
         if(perPage != null) {
             perPageNum = Integer.parseInt(perPage);
         }
-        if(sortType == null) {
-            sortType = "asc";
-        }
-        if(sortBy == null) {
-            sortBy = "firstName";
-        }
 
         int finalPageNum = pageNum;
         int finalPerPageNum = perPageNum;
-        String finalSortBy = sortBy;
-        String finalSortType = sortType;
-
         return new Pagination() {
             @Override
             public int page() {
@@ -61,11 +52,11 @@ public class PaginationResolver implements HandlerMethodArgumentResolver {
             }
 
             @Override
-            public String sortBy() {return finalSortBy; }
+            public String sortBy() {return sortBy; }
 
             @Override
             public String sortType() {
-                return finalSortType;
+                return sortType;
             }
 
             @Override

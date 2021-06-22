@@ -54,6 +54,7 @@ public class StaffModel {
 
     @Min(value = 1, message = "{depId.length}")
     @NotNull(message = "{depId.null}")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer depId;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
