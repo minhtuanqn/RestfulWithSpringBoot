@@ -1,33 +1,29 @@
 package com.service;
 
 import com.customexception.DuplicatedEntityByUniqueIdentityException;
+import com.customexception.NoSuchEntityByIdException;
 import com.entity.DepartmentEntity;
 import com.entity.StaffEntity;
 import com.metamodel.DepartmentEntity_;
 import com.metamodel.StaffEntity_;
 import com.model.DepartmentModel;
+import com.model.PaginationModel;
 import com.model.StaffModel;
 import com.model.StaffResourceModel;
 import com.repository.DepartmentRepository;
 import com.repository.StaffRepository;
-import com.resolver.anotation.Pagination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.utils.PaginationUtils.buildPagination;
@@ -129,6 +125,11 @@ public class StaffService {
         Optional<StaffEntity> existEntityOptional = repository.findStaffEntityByIdAndDeleteAtNull(staffId);
         StaffEntity existEntity = existEntityOptional.orElseThrow();
 
+        //Check exist department
+        if(existEntity.getDepartmentEntity().getDeleteAt() != null) {
+            throw new NoSuchEntityByIdException("Not found");
+        }
+
         //Prepare data for saving
         existEntity.setDeleteAt(LocalDateTime.now());
 
@@ -148,6 +149,12 @@ public class StaffService {
         //Find exist staff in DB
         Optional<StaffEntity> searchedStaffOptional = repository.findStaffEntityByIdAndDeleteAtNull(id);
         StaffEntity searchedStaffEntity = searchedStaffOptional.orElseThrow();
+
+        //Check exist department
+        if(searchedStaffEntity.getDepartmentEntity().getDeleteAt() != null) {
+            throw new NoSuchEntityByIdException("Not found");
+        }
+
         return new StaffModel(searchedStaffEntity, new DepartmentModel(searchedStaffEntity.getDepartmentEntity()));
     }
 
@@ -188,10 +195,12 @@ public class StaffService {
      * @param searchedName
      * @return information of staff resource
      */
-    public StaffResourceModel findByLastnameOrFirstname(Pagination pagination, String searchedName) {
+    public StaffResourceModel findByLastnameOrFirstname(PaginationModel pagination, String searchedName) {
         //Create pageable for pagination
         List<StaffModel> modelList = new ArrayList<>();
-        Pageable pageable = covertToPageable(pagination);
+        String defaultSortBy = "firstName";
+
+        Pageable pageable = covertToPageable(pagination, defaultSortBy);
 
         //Find data in DB
         Page<StaffEntity> entityPage = repository.findAll(containFirstname(searchedName).and(containsNullDeleteAt()).and(containsNullDeleteAtOfDepId())

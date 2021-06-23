@@ -1,9 +1,9 @@
 package com.controller;
 
-import com.entity.StaffEntity;
 import com.model.DepartmentModel;
+import com.model.PaginationModel;
 import com.model.StaffResourceModel;
-import com.resolver.anotation.Pagination;
+import com.resolver.anotation.RequestPagingParam;
 import com.service.DepartmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,8 +15,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Map;
-
-import static com.utils.ValidatorUtils.checkExistFieldOfClass;
 
 @RestController
 @Validated
@@ -74,7 +72,7 @@ public class DepartmentController {
      */
     @PutMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<DepartmentModel> updateDepartment(@PathVariable @Min(0) Integer id,
-                                                            @Valid @RequestBody DepartmentModel requestModel) throws SQLIntegrityConstraintViolationException {
+                                                            @Valid @RequestBody DepartmentModel requestModel) {
         DepartmentModel updatedModel = departmentService.updateDepartment(id, requestModel);
         return new ResponseEntity<>(updatedModel, HttpStatus.OK);
     }
@@ -88,7 +86,7 @@ public class DepartmentController {
     @GetMapping(path = "/{id}/staffs", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Object> getStaffsByDepartmentId(
             @PathVariable @Min(0) Integer id,
-            @Pagination Pagination pagination)  {
+            @RequestPagingParam PaginationModel pagination)  {
 
         StaffResourceModel resourceModel = departmentService.findAllStaffByDepartmentId(id, pagination);
         return new ResponseEntity<>(resourceModel, HttpStatus.OK);

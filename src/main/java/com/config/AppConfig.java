@@ -1,6 +1,6 @@
 package com.config;
 
-import com.resolver.PaginationResolver;
+import com.resolver.RequestPaginationResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -19,6 +19,6 @@ public class AppConfig implements WebMvcConfigurer {
      */
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new PaginationResolver());
+        resolvers.add(new RequestPaginationResolver());
     }
 }

@@ -1,9 +1,11 @@
 package com.controller;
 
 import com.entity.StaffEntity;
+import com.model.PaginationModel;
 import com.model.StaffModel;
 import com.model.StaffResourceModel;
 import com.resolver.anotation.Pagination;
+import com.resolver.anotation.RequestPagingParam;
 import com.service.StaffService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,7 +107,7 @@ public class StaffController {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Object> findByFirstnameOrLastname(
             @RequestParam(value = "searchedValue", required = false, defaultValue = "") String searchedValue,
-            @Pagination Pagination pagination) {
+            @RequestPagingParam PaginationModel pagination) {
 
         StaffResourceModel resource = staffService.findByLastnameOrFirstname(pagination, searchedValue);
         return new ResponseEntity<>(resource, HttpStatus.OK);

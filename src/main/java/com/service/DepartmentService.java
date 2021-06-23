@@ -5,11 +5,11 @@ import com.customexception.NoSuchEntityByIdException;
 import com.entity.DepartmentEntity;
 import com.entity.StaffEntity;
 import com.model.DepartmentModel;
+import com.model.PaginationModel;
 import com.model.StaffModel;
 import com.model.StaffResourceModel;
 import com.repository.DepartmentRepository;
 import com.repository.StaffRepository;
-import com.resolver.anotation.Pagination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -135,12 +135,14 @@ public class DepartmentService {
      * @param pagination
      * @return pagination model of staff model
      */
-    public StaffResourceModel findAllStaffByDepartmentId(Integer id, Pagination pagination) {
+    public StaffResourceModel findAllStaffByDepartmentId(Integer id, PaginationModel pagination) {
 
         if (!departmentRepository.existsDepartmentEntitiesByIdAndDeleteAtNull(id)) {
             throw new NoSuchEntityByIdException("ID of department does not exist");
         }
-        Pageable pageable = covertToPageable(pagination);
+
+        String defaultSortBy = "firstName";
+        Pageable pageable = covertToPageable(pagination, defaultSortBy);
 
         //Find all staff belong to a department with id
         Page<StaffEntity> staffEntityPage = staffRepository.findStaffEntitiesByDepartmentEntityIdEquals(id, pageable);
