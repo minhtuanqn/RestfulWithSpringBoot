@@ -1,5 +1,6 @@
 package com.service;
 
+import com.convertor.PaginationConvertor;
 import com.customexception.DuplicatedEntityByUniqueIdentityException;
 import com.customexception.NoSuchEntityByIdException;
 import com.entity.DepartmentEntity;
@@ -20,8 +21,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static com.utils.PaginationUtils.buildPagination;
-import static com.utils.PaginationUtils.covertToPageable;
 
 
 @Service
@@ -137,12 +136,14 @@ public class DepartmentService {
      */
     public StaffResourceModel findAllStaffByDepartmentId(Integer id, PaginationModel pagination) {
 
+        PaginationConvertor paginationConvertor = new PaginationConvertor();
+
         if (!departmentRepository.existsDepartmentEntitiesByIdAndDeleteAtNull(id)) {
             throw new NoSuchEntityByIdException("ID of department does not exist");
         }
 
         String defaultSortBy = "firstName";
-        Pageable pageable = covertToPageable(pagination, defaultSortBy);
+        Pageable pageable = paginationConvertor.covertToPageable(pagination, defaultSortBy);
 
         //Find all staff belong to a department with id
         Page<StaffEntity> staffEntityPage = staffRepository.findStaffEntitiesByDepartmentEntityIdEquals(id, pageable);
@@ -155,7 +156,7 @@ public class DepartmentService {
         //Prepare resource for return
         StaffResourceModel resource = new StaffResourceModel();
         resource.setData(staffModelList);
-        buildPagination(pagination, staffEntityPage, resource);
+        paginationConvertor.buildPagination(pagination, staffEntityPage, resource);
         return resource;
     }
 

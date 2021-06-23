@@ -1,4 +1,4 @@
-package com.utils;
+package com.convertor;
 
 import com.customexception.NoSuchFieldSortByOfClassException;
 import com.entity.StaffEntity;
@@ -12,9 +12,9 @@ import org.springframework.data.domain.Sort;
 
 import static com.utils.ValidatorUtils.checkExistFieldOfClass;
 
-public class PaginationUtils {
+public class PaginationConvertor {
 
-    public static Pageable covertToPageable(PaginationModel pagination, String defaultSortBy) {
+    public Pageable covertToPageable(PaginationModel pagination, String defaultSortBy) {
         Pageable pageable;
 
         String sortBy = defaultSortBy;
@@ -32,7 +32,7 @@ public class PaginationUtils {
         return pageable;
     }
 
-    public static StaffResourceModel buildPagination(PaginationModel pagination, Page<StaffEntity> page, StaffResourceModel resource) {
+    public StaffResourceModel buildPagination(PaginationModel pagination, Page<StaffEntity> page, StaffResourceModel resource) {
         resource.setTotalPage(page.getTotalPages());
         resource.setTotal((int) page.getTotalElements());
         resource.setPage(pagination.getPage());

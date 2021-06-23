@@ -1,5 +1,6 @@
 package com.service;
 
+import com.convertor.PaginationConvertor;
 import com.customexception.DuplicatedEntityByUniqueIdentityException;
 import com.customexception.NoSuchEntityByIdException;
 import com.entity.DepartmentEntity;
@@ -25,9 +26,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static com.utils.PaginationUtils.buildPagination;
-import static com.utils.PaginationUtils.covertToPageable;
 
 /**
  * Service layer
@@ -92,13 +90,14 @@ public class StaffService {
         Optional<DepartmentEntity> searchedDepOptional = departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(staffModel.getDepId());
         DepartmentEntity searchedDepEntity = searchedDepOptional.orElseThrow();
 
-        if (repository.existsStaffEntityByIdNotAndUsernameEquals(staffModel.getId(), staffModel.getUsername())) {
-            throw new DuplicatedEntityByUniqueIdentityException("Username of staff is duplicated");
-        }
-
         //Find exist staff by id in DB
         Optional<StaffEntity> existStaffOptional = repository.findStaffEntityByIdAndDeleteAtNull(staffModel.getId());
         StaffEntity existStaffEntity = existStaffOptional.orElseThrow();
+
+        //Check exist username
+        if (repository.existsStaffEntityByIdNotAndUsernameEquals(staffModel.getId(), staffModel.getUsername())) {
+            throw new DuplicatedEntityByUniqueIdentityException("Username of staff is duplicated");
+        }
 
         //Prepare for saved entity
         StaffEntity staffEntity = new StaffEntity(staffModel, searchedDepEntity);
@@ -196,16 +195,18 @@ public class StaffService {
      * @return information of staff resource
      */
     public StaffResourceModel findByLastnameOrFirstname(PaginationModel pagination, String searchedName) {
-        //Create pageable for pagination
-        List<StaffModel> modelList = new ArrayList<>();
-        String defaultSortBy = "firstName";
 
-        Pageable pageable = covertToPageable(pagination, defaultSortBy);
+        PaginationConvertor paginationConvertor = new PaginationConvertor();
+
+        //Create pageable for pagination
+        String defaultSortBy = "firstName";
+        Pageable pageable = paginationConvertor.covertToPageable(pagination, defaultSortBy);
 
         //Find data in DB
         Page<StaffEntity> entityPage = repository.findAll(containFirstname(searchedName).and(containsNullDeleteAt()).and(containsNullDeleteAtOfDepId())
                 .or(containLastname(searchedName).and(containsNullDeleteAt().and(containsNullDeleteAtOfDepId()))), pageable);
 
+        List<StaffModel> modelList = new ArrayList<>();
         List<StaffEntity> entityList = entityPage.toList();
         for (StaffEntity entity : entityList) {
             modelList.add(new StaffModel(entity, new DepartmentModel(entity.getDepartmentEntity())));
@@ -214,7 +215,7 @@ public class StaffService {
         //Prepare data for resource
         StaffResourceModel resource = new StaffResourceModel();
         resource.setData(modelList);
-        buildPagination(pagination, entityPage, resource);
+        paginationConvertor.buildPagination(pagination, entityPage, resource);
         return resource;
     }
 

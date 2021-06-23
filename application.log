@@ -29,7 +29,7 @@
 2021-06-23 00:08:58.688 ERROR 12696 --- [http-nio-8080-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
 
 java.lang.NullPointerException: null
-	at com.utils.PaginationUtils.covertToPageable(PaginationUtils.java:29) ~[main/:na]
+	at com.convertor.PaginationConvertor.covertToPageable(PaginationUtils.java:29) ~[main/:na]
 	at com.service.DepartmentService.findAllStaffByDepartmentId(DepartmentService.java:144) ~[main/:na]
 	at com.service.DepartmentService$$FastClassBySpringCGLIB$$9ab601bd.invoke(<generated>) ~[main/:na]
 	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.6.jar:5.3.6]
@@ -192,7 +192,7 @@ java.lang.NoSuchMethodError: javax.servlet.http.HttpServletRequest.getHttpServle
 2021-06-23 00:10:35.205 ERROR 5160 --- [http-nio-8080-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
 
 java.lang.NullPointerException: null
-	at com.utils.PaginationUtils.covertToPageable(PaginationUtils.java:29) ~[main/:na]
+	at com.convertor.PaginationConvertor.covertToPageable(PaginationUtils.java:29) ~[main/:na]
 	at com.service.DepartmentService.findAllStaffByDepartmentId(DepartmentService.java:144) ~[main/:na]
 	at com.service.DepartmentService$$FastClassBySpringCGLIB$$9ab601bd.invoke(<generated>) ~[main/:na]
 	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.6.jar:5.3.6]
@@ -360,7 +360,7 @@ java.lang.NoSuchMethodError: javax.servlet.http.HttpServletRequest.getHttpServle
 2021-06-23 00:18:17.167 ERROR 13684 --- [http-nio-8080-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
 
 java.lang.NullPointerException: null
-	at com.utils.PaginationUtils.covertToPageable(PaginationUtils.java:29) ~[main/:na]
+	at com.convertor.PaginationConvertor.covertToPageable(PaginationUtils.java:29) ~[main/:na]
 	at com.service.DepartmentService.findAllStaffByDepartmentId(DepartmentService.java:144) ~[main/:na]
 	at com.service.DepartmentService$$FastClassBySpringCGLIB$$9ab601bd.invoke(<generated>) ~[main/:na]
 	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.6.jar:5.3.6]
@@ -527,7 +527,7 @@ java.lang.NoSuchMethodError: javax.servlet.http.HttpServletRequest.getHttpServle
 2021-06-23 00:18:42.822 ERROR 26456 --- [http-nio-8080-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
 
 java.lang.NullPointerException: null
-	at com.utils.PaginationUtils.covertToPageable(PaginationUtils.java:29) ~[main/:na]
+	at com.convertor.PaginationConvertor.covertToPageable(PaginationUtils.java:29) ~[main/:na]
 	at com.service.DepartmentService.findAllStaffByDepartmentId(DepartmentService.java:144) ~[main/:na]
 	at com.service.DepartmentService$$FastClassBySpringCGLIB$$9ab601bd.invoke(<generated>) ~[main/:na]
 	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.6.jar:5.3.6]
@@ -689,7 +689,7 @@ java.lang.NoSuchMethodError: javax.servlet.http.HttpServletRequest.getHttpServle
 2021-06-23 00:20:22.577 ERROR 30468 --- [http-nio-8080-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
 
 java.lang.NullPointerException: null
-	at com.utils.PaginationUtils.covertToPageable(PaginationUtils.java:31) ~[main/:na]
+	at com.convertor.PaginationConvertor.covertToPageable(PaginationUtils.java:31) ~[main/:na]
 	at com.service.DepartmentService.findAllStaffByDepartmentId(DepartmentService.java:144) ~[main/:na]
 	at com.service.DepartmentService$$FastClassBySpringCGLIB$$9ab601bd.invoke(<generated>) ~[main/:na]
 	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.6.jar:5.3.6]
@@ -857,7 +857,7 @@ java.lang.NoSuchMethodError: javax.servlet.http.HttpServletRequest.getHttpServle
 2021-06-23 00:23:25.930 ERROR 13492 --- [http-nio-8080-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
 
 java.lang.NullPointerException: null
-	at com.utils.PaginationUtils.covertToPageable(PaginationUtils.java:31) ~[main/:na]
+	at com.convertor.PaginationConvertor.covertToPageable(PaginationUtils.java:31) ~[main/:na]
 	at com.service.DepartmentService.findAllStaffByDepartmentId(DepartmentService.java:144) ~[main/:na]
 	at com.service.DepartmentService$$FastClassBySpringCGLIB$$9ab601bd.invoke(<generated>) ~[main/:na]
 	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.6.jar:5.3.6]
@@ -1024,7 +1024,7 @@ java.lang.NoSuchMethodError: javax.servlet.http.HttpServletRequest.getHttpServle
 2021-06-23 00:23:43.274 ERROR 19608 --- [http-nio-8080-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
 
 java.lang.NullPointerException: null
-	at com.utils.PaginationUtils.covertToPageable(PaginationUtils.java:31) ~[main/:na]
+	at com.convertor.PaginationConvertor.covertToPageable(PaginationUtils.java:31) ~[main/:na]
 	at com.service.DepartmentService.findAllStaffByDepartmentId(DepartmentService.java:144) ~[main/:na]
 	at com.service.DepartmentService$$FastClassBySpringCGLIB$$9ab601bd.invoke(<generated>) ~[main/:na]
 	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.6.jar:5.3.6]
@@ -1158,7 +1158,7 @@ java.lang.NoSuchMethodError: javax.servlet.http.HttpServletRequest.getHttpServle
 2021-06-23 00:24:08.676 ERROR 19608 --- [http-nio-8080-exec-5] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
 
 java.lang.NullPointerException: null
-	at com.utils.PaginationUtils.covertToPageable(PaginationUtils.java:31) ~[main/:na]
+	at com.convertor.PaginationConvertor.covertToPageable(PaginationUtils.java:31) ~[main/:na]
 	at com.service.DepartmentService.findAllStaffByDepartmentId(DepartmentService.java:144) ~[main/:na]
 	at com.service.DepartmentService$$FastClassBySpringCGLIB$$9ab601bd.invoke(<generated>) ~[main/:na]
 	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.6.jar:5.3.6]
@@ -1292,7 +1292,7 @@ java.lang.NoSuchMethodError: javax.servlet.http.HttpServletRequest.getHttpServle
 2021-06-23 00:25:01.554 ERROR 19608 --- [http-nio-8080-exec-7] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
 
 java.lang.NullPointerException: null
-	at com.utils.PaginationUtils.covertToPageable(PaginationUtils.java:29) ~[main/:na]
+	at com.convertor.PaginationConvertor.covertToPageable(PaginationUtils.java:29) ~[main/:na]
 	at com.service.DepartmentService.findAllStaffByDepartmentId(DepartmentService.java:144) ~[main/:na]
 	at com.service.DepartmentService$$FastClassBySpringCGLIB$$9ab601bd.invoke(<generated>) ~[main/:na]
 	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.6.jar:5.3.6]
@@ -1556,3 +1556,69 @@ java.lang.NoSuchMethodError: javax.servlet.http.HttpServletRequest.getHttpServle
 2021-06-23 00:34:02.952  INFO 4468 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
 2021-06-23 00:34:03.430  INFO 4468 --- [http-nio-8080-exec-2] com.service.DepartmentService            : Created a department with id: 1
 2021-06-23 00:34:06.692  INFO 4468 --- [http-nio-8080-exec-3] com.service.StaffService                 : Created staff with id: 1
+2021-06-23 12:28:41.063  INFO 29832 --- [main] com.RestfullWithSpringBootApplication    : Starting RestfullWithSpringBootApplication using Java 11.0.10 on J5Y07H2 with PID 29832 (D:\Assignment\RestfullWithSpringBoot\build\classes\java\main started by tuanmle in D:\Assignment\RestfullWithSpringBoot)
+2021-06-23 12:28:41.063  INFO 29832 --- [main] com.RestfullWithSpringBootApplication    : No active profile set, falling back to default profiles: default
+2021-06-23 12:28:42.281  INFO 29832 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-23 12:28:42.597  INFO 29832 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 305 ms. Found 2 JPA repository interfaces.
+2021-06-23 12:28:42.952  INFO 29832 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2021-06-23 12:28:42.967  INFO 29832 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-06-23 12:28:42.967  INFO 29832 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.45]
+2021-06-23 12:28:43.067  INFO 29832 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-06-23 12:28:43.067  INFO 29832 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1951 ms
+2021-06-23 12:28:43.131  INFO 29832 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-06-23 12:28:43.229  INFO 29832 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-06-23 12:28:43.298  INFO 29832 --- [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2'. Database available at 'jdbc:h2:mem:tuanle'
+2021-06-23 12:28:43.588  INFO 29832 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-23 12:28:43.626  INFO 29832 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.30.Final
+2021-06-23 12:28:43.731  INFO 29832 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-23 12:28:43.845  INFO 29832 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2021-06-23 12:28:44.471  INFO 29832 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-23 12:28:44.479  INFO 29832 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-23 12:28:44.526  WARN 29832 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-06-23 12:28:45.021  INFO 29832 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7153995c, org.springframework.security.web.context.SecurityContextPersistenceFilter@11f8d64, org.springframework.security.web.header.HeaderWriterFilter@12639753, org.springframework.security.web.authentication.logout.LogoutFilter@f9b97dc, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@74a29300, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@62a193e0, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1c71d704, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3b256d50, org.springframework.security.web.session.SessionManagementFilter@7fe1a856, org.springframework.security.web.access.ExceptionTranslationFilter@6f0124b5, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@43c73b5c]
+2021-06-23 12:28:45.129  INFO 29832 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-06-23 12:28:45.196  INFO 29832 --- [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2021-06-23 12:28:45.346  INFO 29832 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2021-06-23 12:28:45.355  INFO 29832 --- [main] com.RestfullWithSpringBootApplication    : Started RestfullWithSpringBootApplication in 4.601 seconds (JVM running for 5.599)
+2021-06-23 12:30:46.798  INFO 29832 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-06-23 12:30:46.800  INFO 29832 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-06-23 12:30:46.801  INFO 29832 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-06-23 12:30:52.773  INFO 29832 --- [http-nio-8080-exec-4] com.service.DepartmentService            : Created a department with id: 1
+2021-06-23 12:31:44.032  INFO 29832 --- [http-nio-8080-exec-10] com.service.DepartmentService            : Updated information of department with id: 1
+2021-06-23 12:32:08.093  INFO 29832 --- [http-nio-8080-exec-3] com.service.DepartmentService            : Deleted department with id: 1
+2021-06-23 12:32:21.778  INFO 29832 --- [http-nio-8080-exec-4] com.service.DepartmentService            : Created a department with id: 2
+2021-06-23 12:32:58.861  INFO 29832 --- [http-nio-8080-exec-9] com.service.StaffService                 : Created staff with id: 1
+2021-06-23 12:34:25.426  INFO 29832 --- [http-nio-8080-exec-1] com.service.StaffService                 : Updated staff with id 1
+2021-06-23 12:36:13.181  INFO 29832 --- [http-nio-8080-exec-4] com.service.DepartmentService            : Deleted department with id: 2
+2021-06-23 12:36:38.028  INFO 18924 --- [main] com.RestfullWithSpringBootApplication    : Starting RestfullWithSpringBootApplication using Java 11.0.10 on J5Y07H2 with PID 18924 (D:\Assignment\RestfullWithSpringBoot\build\classes\java\main started by tuanmle in D:\Assignment\RestfullWithSpringBoot)
+2021-06-23 12:36:38.031  INFO 18924 --- [main] com.RestfullWithSpringBootApplication    : No active profile set, falling back to default profiles: default
+2021-06-23 12:36:39.424  INFO 18924 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-23 12:36:39.732  INFO 18924 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 301 ms. Found 2 JPA repository interfaces.
+2021-06-23 12:36:40.108  INFO 18924 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2021-06-23 12:36:40.108  INFO 18924 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-06-23 12:36:40.108  INFO 18924 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.45]
+2021-06-23 12:36:40.221  INFO 18924 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-06-23 12:36:40.221  INFO 18924 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2151 ms
+2021-06-23 12:36:40.252  INFO 18924 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-06-23 12:36:40.321  INFO 18924 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-06-23 12:36:40.368  INFO 18924 --- [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2'. Database available at 'jdbc:h2:mem:tuanle'
+2021-06-23 12:36:40.641  INFO 18924 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-23 12:36:40.663  INFO 18924 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.30.Final
+2021-06-23 12:36:40.745  INFO 18924 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-23 12:36:40.824  INFO 18924 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2021-06-23 12:36:41.317  INFO 18924 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-23 12:36:41.317  INFO 18924 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-23 12:36:41.349  WARN 18924 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-06-23 12:36:41.824  INFO 18924 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@25b7ccfc, org.springframework.security.web.context.SecurityContextPersistenceFilter@7bbc3b6e, org.springframework.security.web.header.HeaderWriterFilter@8b814b, org.springframework.security.web.authentication.logout.LogoutFilter@3c41b4b, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@40830e1e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@451e8bd0, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@13b409bb, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@56ed6e17, org.springframework.security.web.session.SessionManagementFilter@4057babc, org.springframework.security.web.access.ExceptionTranslationFilter@3b0b20a8, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@f9b97dc]
+2021-06-23 12:36:41.933  INFO 18924 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-06-23 12:36:42.002  INFO 18924 --- [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2021-06-23 12:36:42.124  INFO 18924 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2021-06-23 12:36:42.124  INFO 18924 --- [main] com.RestfullWithSpringBootApplication    : Started RestfullWithSpringBootApplication in 4.516 seconds (JVM running for 5.729)
+2021-06-23 12:37:18.434  INFO 18924 --- [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-06-23 12:37:18.435  INFO 18924 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-06-23 12:37:18.436  INFO 18924 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-06-23 12:37:18.900  INFO 18924 --- [http-nio-8080-exec-2] com.service.DepartmentService            : Created a department with id: 1
+2021-06-23 12:37:39.852  INFO 18924 --- [http-nio-8080-exec-5] com.service.StaffService                 : Created staff with id: 1
+2021-06-23 12:39:06.181  INFO 18924 --- [http-nio-8080-exec-8] com.service.StaffService                 : Created staff with id: 2
+2021-06-23 12:40:32.976  INFO 18924 --- [http-nio-8080-exec-7] com.service.StaffService                 : Updated staff with id 1
+2021-06-23 12:41:15.946  INFO 18924 --- [http-nio-8080-exec-4] com.service.DepartmentService            : Deleted department with id: 1
