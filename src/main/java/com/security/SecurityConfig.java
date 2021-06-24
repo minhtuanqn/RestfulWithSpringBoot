@@ -1,17 +1,20 @@
-package com.config;
+package com.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.repository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -26,6 +29,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     Environment environment;
+
+    /**
+     * Create bean for UserDetailService
+     * @return
+     */
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new StaffDetailsService();
+    }
 
     /**
      * Config security
@@ -44,22 +56,44 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint());
     }
 
+//    /**
+//     * Register in-memony user details for authentication
+//     * @param auth
+//     * @throws Exception
+//     */
+//    @Autowired
+//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//        String username = environment.getProperty("spring.security.user.name");
+//        String password = environment.getProperty("spring.security.user.password");
+//        String role = environment.getProperty("spring.security.user.roles");
+//        if (username != null && password != null) {
+//            auth.inMemoryAuthentication()
+//                    .withUser(username)
+//                    .password(passwordEncoder().encode(password))
+//                    .roles(role);
+//        }
+//    }
+
     /**
-     * Register in-memony user details for authentication
+     * Register bean and configure for DaoAuthenticationProvider
+     * @return
+     */
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
+
+    /**
+     * Config for AuthenticationManagerBuilder
      * @param auth
      * @throws Exception
      */
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        String username = environment.getProperty("spring.security.user.name");
-        String password = environment.getProperty("spring.security.user.password");
-        String role = environment.getProperty("spring.security.user.roles");
-        if (username != null && password != null) {
-            auth.inMemoryAuthentication()
-                    .withUser(username)
-                    .password(passwordEncoder().encode(password))
-                    .roles(role);
-        }
+    @Override
+    protected  void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
     }
 
     /**
@@ -92,6 +126,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
 
 }

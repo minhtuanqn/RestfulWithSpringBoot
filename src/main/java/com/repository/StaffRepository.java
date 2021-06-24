@@ -25,4 +25,6 @@ public interface StaffRepository extends CrudRepository<StaffEntity, Integer>, J
 
     boolean existsStaffEntityByIdNotAndUsernameEquals(Integer id, String username);
 
+    Optional<StaffEntity> findStaffEntityByUsername(String username);
+
 }

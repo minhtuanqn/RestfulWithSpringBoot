@@ -1,7 +1,9 @@
 package com.model;
 
 import com.entity.StaffEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -50,6 +52,7 @@ public class StaffModel {
 
     @NotNull(message = "{password.null}")
     @Length(min = 3, max = 50, message = "{password.length}")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Min(value = 1, message = "{depId.length}")

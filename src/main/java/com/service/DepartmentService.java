@@ -7,8 +7,8 @@ import com.entity.DepartmentEntity;
 import com.entity.StaffEntity;
 import com.model.DepartmentModel;
 import com.model.PaginationModel;
+import com.model.ResourceModel;
 import com.model.StaffModel;
-import com.model.StaffResourceModel;
 import com.repository.DepartmentRepository;
 import com.repository.StaffRepository;
 import org.slf4j.Logger;
@@ -134,9 +134,9 @@ public class DepartmentService {
      * @param pagination
      * @return pagination model of staff model
      */
-    public StaffResourceModel findAllStaffByDepartmentId(Integer id, PaginationModel pagination) {
+    public ResourceModel<StaffModel> findAllStaffByDepartmentId(Integer id, PaginationModel pagination) {
 
-        PaginationConvertor paginationConvertor = new PaginationConvertor();
+        PaginationConvertor<StaffModel, StaffEntity> paginationConvertor = new PaginationConvertor<>();
 
         if (!departmentRepository.existsDepartmentEntitiesByIdAndDeleteAtNull(id)) {
             throw new NoSuchEntityByIdException("ID of department does not exist");
@@ -154,9 +154,38 @@ public class DepartmentService {
             staffModelList.add(new StaffModel(entity));
         }
         //Prepare resource for return
-        StaffResourceModel resource = new StaffResourceModel();
+        ResourceModel<StaffModel> resource = new ResourceModel<>();
         resource.setData(staffModelList);
         paginationConvertor.buildPagination(pagination, staffEntityPage, resource);
+        return resource;
+    }
+
+    /**
+     * find department like name
+     * @param searchedValue
+     * @param pagination
+     * @return
+     */
+    public ResourceModel<DepartmentModel> findDepartmentLikeName(String searchedValue, PaginationModel pagination) {
+        PaginationConvertor<DepartmentModel, DepartmentEntity> paginationConvertor = new PaginationConvertor<>();
+
+        //Prepare pageable for query
+        String defaultSortBy = "name";
+        Pageable pageable = paginationConvertor.covertToPageable(pagination, defaultSortBy);
+
+        //Query from DB
+        Page<DepartmentEntity> departmentsPage = departmentRepository.findDepartmentEntityByNameContainsAndDeleteAtNull(searchedValue, pageable);
+
+        //Convert to list of department model
+        List<DepartmentModel> modelList = new ArrayList<>();
+        for (DepartmentEntity entity: departmentsPage) {
+            modelList.add(new DepartmentModel(entity));
+        }
+
+        //Prepare resource for return
+        ResourceModel<DepartmentModel> resource = new ResourceModel<>();
+        resource.setData(modelList);
+        paginationConvertor.buildPagination(pagination, departmentsPage, resource);
         return resource;
     }
 

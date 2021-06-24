@@ -2,8 +2,8 @@ package com.controller;
 
 import com.entity.StaffEntity;
 import com.model.PaginationModel;
+import com.model.ResourceModel;
 import com.model.StaffModel;
-import com.model.StaffResourceModel;
 import com.resolver.anotation.RequestPagingParam;
 import com.service.StaffService;
 import org.slf4j.Logger;
@@ -76,7 +76,7 @@ public class StaffController {
      */
     @DeleteMapping(path = "/{staffId}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Object> deleteStaff(@PathVariable @Min(0) int staffId) throws NoSuchElementException {
+    public ResponseEntity<Object> deleteStaff(@PathVariable @Min(0) int staffId) {
         StaffModel staffModel = staffService.deleteStaffById(staffId);
         return new ResponseEntity<>(staffModel, HttpStatus.OK);
     }
@@ -108,7 +108,7 @@ public class StaffController {
             @RequestParam(value = "searchedValue", required = false, defaultValue = "") String searchedValue,
             @RequestPagingParam PaginationModel pagination) {
 
-        StaffResourceModel resource = staffService.findByLastnameOrFirstname(pagination, searchedValue);
+        ResourceModel<StaffModel> resource = staffService.findByLastnameOrFirstname(pagination, searchedValue);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 

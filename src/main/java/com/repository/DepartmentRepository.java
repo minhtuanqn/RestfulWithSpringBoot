@@ -2,6 +2,8 @@ package com.repository;
 
 import com.entity.DepartmentEntity;
 import com.entity.StaffEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 
@@ -17,5 +19,7 @@ public interface DepartmentRepository extends CrudRepository<DepartmentEntity, I
     boolean existsDepartmentEntitiesByNameAndIdNot(String name, Integer id);
 
     Optional<DepartmentEntity> findDepartmentEntityByIdAndDeleteAtNull(Integer id);
+
+    Page<DepartmentEntity> findDepartmentEntityByNameContainsAndDeleteAtNull(String name, Pageable pageable);
     
 }

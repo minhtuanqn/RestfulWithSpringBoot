@@ -5,18 +5,18 @@ import java.util.List;
 /**
  * Model for staff resource
  */
-public class StaffResourceModel {
+public class ResourceModel<T> {
     private int page;
     private int totalPage;
     private int perPage;
     private int total;
-    private List<StaffModel> data;
+    private List<T> data;
 
-    public List<StaffModel> getData() {
+    public List<T> getData() {
         return data;
     }
 
-    public void setData(List<StaffModel> data) {
+    public void setData(List<T> data) {
         this.data = data;
     }
 

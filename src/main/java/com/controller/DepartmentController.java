@@ -2,7 +2,8 @@ package com.controller;
 
 import com.model.DepartmentModel;
 import com.model.PaginationModel;
-import com.model.StaffResourceModel;
+import com.model.ResourceModel;
+import com.model.StaffModel;
 import com.resolver.anotation.RequestPagingParam;
 import com.service.DepartmentService;
 import org.springframework.http.HttpStatus;
@@ -13,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Map;
 
 @RestController
 @Validated
@@ -34,7 +33,7 @@ public class DepartmentController {
      * @return response entity contains created model
      */
     @PostMapping(path = "", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Object> createDepartment(@Valid @RequestBody DepartmentModel requestModel) throws SQLIntegrityConstraintViolationException {
+    public ResponseEntity<Object> createDepartment(@Valid @RequestBody DepartmentModel requestModel) {
         DepartmentModel savedModel = departmentService.createDepartment(requestModel);
         return new ResponseEntity<>(savedModel, HttpStatus.OK);
     }
@@ -88,7 +87,21 @@ public class DepartmentController {
             @PathVariable @Min(0) Integer id,
             @RequestPagingParam PaginationModel pagination)  {
 
-        StaffResourceModel resourceModel = departmentService.findAllStaffByDepartmentId(id, pagination);
+        ResourceModel<StaffModel> resourceModel = departmentService.findAllStaffByDepartmentId(id, pagination);
         return new ResponseEntity<>(resourceModel, HttpStatus.OK);
+    }
+
+    /**
+     * Find department by searched value
+     * @param name
+     * @param paginationModel
+     * @return
+     */
+    @GetMapping(path = "", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<Object> getDeprtmentLikeName(
+            @RequestParam(value = "searchedName", defaultValue = "") String name,
+            @RequestPagingParam PaginationModel paginationModel) {
+        ResourceModel<DepartmentModel> departmentList = departmentService.findDepartmentLikeName(name, paginationModel);
+        return new ResponseEntity<>(departmentList, HttpStatus.OK);
     }
 }

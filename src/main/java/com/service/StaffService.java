@@ -9,8 +9,8 @@ import com.metamodel.DepartmentEntity_;
 import com.metamodel.StaffEntity_;
 import com.model.DepartmentModel;
 import com.model.PaginationModel;
+import com.model.ResourceModel;
 import com.model.StaffModel;
-import com.model.StaffResourceModel;
 import com.repository.DepartmentRepository;
 import com.repository.StaffRepository;
 import org.slf4j.Logger;
@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Join;
@@ -37,11 +39,14 @@ public class StaffService {
 
     private final DepartmentRepository departmentRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(StaffService.class);
 
-    public StaffService(StaffRepository repository, DepartmentRepository departmentRepository) {
+    public StaffService(StaffRepository repository, DepartmentRepository departmentRepository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.departmentRepository = departmentRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -65,6 +70,7 @@ public class StaffService {
             entity.setId(null);
         }
         entity.setCreateAt(LocalDateTime.now());
+        entity.setPassword(passwordEncoder.encode(model.getPassword()));
 
         //Save entity to DB
         StaffEntity savedEntity = repository.save(entity);
@@ -104,6 +110,7 @@ public class StaffService {
         LocalDateTime createAt = existStaffEntity.getCreateAt();
         staffEntity.setUpdateAt(LocalDateTime.now());
         staffEntity.setCreateAt(createAt);
+        staffEntity.setPassword(passwordEncoder.encode(staffModel.getPassword()));
 
         //Save entity to DB
         StaffEntity savedEntity = repository.save(staffEntity);
@@ -194,9 +201,9 @@ public class StaffService {
      * @param searchedName
      * @return information of staff resource
      */
-    public StaffResourceModel findByLastnameOrFirstname(PaginationModel pagination, String searchedName) {
+    public ResourceModel<StaffModel> findByLastnameOrFirstname(PaginationModel pagination, String searchedName) {
 
-        PaginationConvertor paginationConvertor = new PaginationConvertor();
+        PaginationConvertor<StaffModel, StaffEntity> paginationConvertor = new PaginationConvertor();
 
         //Create pageable for pagination
         String defaultSortBy = "firstName";
@@ -213,7 +220,7 @@ public class StaffService {
         }
 
         //Prepare data for resource
-        StaffResourceModel resource = new StaffResourceModel();
+        ResourceModel<StaffModel> resource = new ResourceModel<>();
         resource.setData(modelList);
         paginationConvertor.buildPagination(pagination, entityPage, resource);
         return resource;
