@@ -61,6 +61,7 @@ public class StaffModel {
     private Integer depId;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("department")
     private DepartmentModel departmentModel;
 
     public StaffModel() {

@@ -96,4 +96,6 @@ public class DepartmentEntity {
     public void setDeleteAt(LocalDateTime deleteAt) {
         this.deleteAt = deleteAt;
     }
+
+
 }

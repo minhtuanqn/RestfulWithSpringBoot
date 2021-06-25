@@ -1,8 +1,6 @@
 package com.controller;
 
-import com.customexception.DuplicatedEntityByUniqueIdentityException;
-import com.customexception.NoSuchEntityByIdException;
-import com.customexception.NoSuchFieldSortByOfClassException;
+import com.customexception.*;
 import com.model.APIErrorModel;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.BeanExpressionException;
@@ -200,11 +198,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
      * @param ex
      * @return response entity
      */
-    @ExceptionHandler({DuplicatedEntityByUniqueIdentityException.class})
-    public ResponseEntity<Object> handleDuplicatedEntityByUniqueIdentityException(
-            DuplicatedEntityByUniqueIdentityException ex) {
+    @ExceptionHandler({ClassCustomException.class})
+    public ResponseEntity<Object> handleClassCustomException(
+            ClassCustomException ex) {
         initMap();
-        invalidMap.put("Duplicated unique identity exception", ex.getMessage());
+        invalidMap.put("Class exception", ex.getMessage());
         APIErrorModel apiErrorModel = new APIErrorModel(LocalDateTime.now(), HttpStatus.BAD_REQUEST.name(), invalidMap);
         return new ResponseEntity<>(apiErrorModel, HttpStatus.BAD_REQUEST);
     }
@@ -214,25 +212,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
      * @param ex
      * @return response entity
      */
-    @ExceptionHandler({NoSuchFieldSortByOfClassException.class})
-    public ResponseEntity<Object> handleNoSuchFieldSortByOfClassException(
-            NoSuchFieldSortByOfClassException ex) {
+    @ExceptionHandler({SQLCustomException.class})
+    public ResponseEntity<Object> handleSQLCustomExceptionException(
+            SQLCustomException ex) {
         initMap();
-        invalidMap.put("No such sort type exception", ex.getMessage());
-        APIErrorModel apiErrorModel = new APIErrorModel(LocalDateTime.now(), HttpStatus.BAD_REQUEST.name(), invalidMap);
-        return new ResponseEntity<>(apiErrorModel, HttpStatus.BAD_REQUEST);
-    }
-
-    /**
-     * Handle exist unique identity exception
-     * @param ex
-     * @return response entity
-     */
-    @ExceptionHandler({NoSuchEntityByIdException.class})
-    public ResponseEntity<Object> handleNoSuchEntityByIdException(
-            NoSuchEntityByIdException ex) {
-        initMap();
-        invalidMap.put("No such entity by Id exception", ex.getMessage());
+        invalidMap.put("Data exception", ex.getMessage());
         APIErrorModel apiErrorModel = new APIErrorModel(LocalDateTime.now(), HttpStatus.BAD_REQUEST.name(), invalidMap);
         return new ResponseEntity<>(apiErrorModel, HttpStatus.BAD_REQUEST);
     }

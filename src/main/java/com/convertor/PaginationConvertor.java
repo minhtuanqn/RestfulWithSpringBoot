@@ -1,6 +1,6 @@
 package com.convertor;
 
-import com.customexception.NoSuchFieldSortByOfClassException;
+import com.customexception.NotFoundFieldOfClassException;
 import com.entity.StaffEntity;
 import com.model.PaginationModel;
 import com.model.ResourceModel;
@@ -26,7 +26,7 @@ public class PaginationConvertor<M, E> {
         String sortBy = defaultSortBy;
         if (pagination.getSortBy() != null) {
             if (!checkExistFieldOfClass(StaffEntity.class, pagination.getSortBy())) {
-                throw new NoSuchFieldSortByOfClassException("Can not define sortBy");
+                throw new NotFoundFieldOfClassException("Can not define sortBy");
             }
             sortBy = pagination.getSortBy();
         }

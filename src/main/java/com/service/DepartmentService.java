@@ -1,8 +1,8 @@
 package com.service;
 
 import com.convertor.PaginationConvertor;
-import com.customexception.DuplicatedEntityByUniqueIdentityException;
-import com.customexception.NoSuchEntityByIdException;
+import com.customexception.DuplicatedEntityException;
+import com.customexception.NoSuchEntityException;
 import com.entity.DepartmentEntity;
 import com.entity.StaffEntity;
 import com.model.DepartmentModel;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
-
 
 
 @Service
@@ -45,7 +44,7 @@ public class DepartmentService {
     public DepartmentModel createDepartment(DepartmentModel model) {
         //Check existed name of department
         if (departmentRepository.existsDepartmentEntitiesByName(model.getName())) {
-            throw new DuplicatedEntityByUniqueIdentityException("Name of department have been existed");
+            throw new DuplicatedEntityException("Name of department have been existed");
         }
 
         //Set id for model is null
@@ -73,15 +72,16 @@ public class DepartmentService {
     public DepartmentModel deleteDepartment(Integer id) {
         //Find department with id
         Optional<DepartmentEntity> deletedDepartmentOptional = departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(id);
-        DepartmentEntity deletedDepartmentEntity = deletedDepartmentOptional.orElseThrow();
+        DepartmentEntity deletedDepartmentEntity = deletedDepartmentOptional
+                .orElseThrow(() -> new NoSuchEntityException("Not found department"));
 
         //Set deleted date for entity
         deletedDepartmentEntity.setDeleteAt(LocalDateTime.now());
 
         //update status of department
-        departmentRepository.save(deletedDepartmentEntity);
+        DepartmentEntity responseEntity = departmentRepository.save(deletedDepartmentEntity);
         LOGGER.info("Deleted department with id: " + id);
-        return new DepartmentModel(deletedDepartmentEntity);
+        return new DepartmentModel(responseEntity);
 
     }
 
@@ -94,7 +94,9 @@ public class DepartmentService {
     public DepartmentModel findDepartmentById(Integer id) {
         //Find department with id
         Optional<DepartmentEntity> searchedDepartmentOptional = departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(id);
-        return new DepartmentModel(searchedDepartmentOptional.orElseThrow());
+        DepartmentEntity departmentEntity = searchedDepartmentOptional
+                .orElseThrow(() -> new NoSuchEntityException("Not found department"));
+        return new DepartmentModel(departmentEntity);
     }
 
 
@@ -108,11 +110,12 @@ public class DepartmentService {
     public DepartmentModel updateDepartment(Integer departmentId, DepartmentModel model) {
         //Find department with id
         Optional<DepartmentEntity> searchedDepartmentOptional = departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(departmentId);
-        DepartmentEntity searchedDepartmentEntity = searchedDepartmentOptional.orElseThrow();
+        DepartmentEntity searchedDepartmentEntity = searchedDepartmentOptional
+                .orElseThrow(() -> new NoSuchEntityException("Not found department"));
 
         //Check existed department with name of updated model
         if (departmentRepository.existsDepartmentEntitiesByNameAndIdNot(model.getName(), departmentId)) {
-            throw new DuplicatedEntityByUniqueIdentityException("Name of department have been existed");
+            throw new DuplicatedEntityException("Name of department have been existed");
         }
 
         //Prepare entity for saving to DB
@@ -139,7 +142,7 @@ public class DepartmentService {
         PaginationConvertor<StaffModel, StaffEntity> paginationConvertor = new PaginationConvertor<>();
 
         if (!departmentRepository.existsDepartmentEntitiesByIdAndDeleteAtNull(id)) {
-            throw new NoSuchEntityByIdException("ID of department does not exist");
+            throw new NoSuchEntityException("Not found department");
         }
 
         String defaultSortBy = "firstName";
@@ -162,6 +165,7 @@ public class DepartmentService {
 
     /**
      * find department like name
+     *
      * @param searchedValue
      * @param pagination
      * @return
@@ -178,7 +182,7 @@ public class DepartmentService {
 
         //Convert to list of department model
         List<DepartmentModel> modelList = new ArrayList<>();
-        for (DepartmentEntity entity: departmentsPage) {
+        for (DepartmentEntity entity : departmentsPage) {
             modelList.add(new DepartmentModel(entity));
         }
 
