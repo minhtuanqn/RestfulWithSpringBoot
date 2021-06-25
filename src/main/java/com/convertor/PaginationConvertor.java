@@ -8,10 +8,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-
-
 import static com.utils.ValidatorUtils.checkExistFieldOfClass;
 
+/**
+ * Class for support pagination
+ * @param <M> Type of model
+ * @param <E> Type of entity
+ */
 public class PaginationConvertor<M, E> {
 
     /**

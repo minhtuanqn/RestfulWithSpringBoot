@@ -1,5 +1,8 @@
 package com.customexception;
 
+/**
+ * Custom exception about a class(like exception abount field name,...)
+ */
 public class ClassCustomException extends RuntimeException{
     public ClassCustomException() {
     }

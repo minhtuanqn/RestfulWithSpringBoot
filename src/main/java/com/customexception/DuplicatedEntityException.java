@@ -1,7 +1,7 @@
 package com.customexception;
 
 /**
- * Custom exception for duplicated unique identity
+ * Custom exception for duplicated entity
  */
 public class DuplicatedEntityException extends SQLCustomException{
 

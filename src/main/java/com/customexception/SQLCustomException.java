@@ -1,5 +1,8 @@
 package com.customexception;
 
+/**
+ * Custom exception about a sql(like exception about entity,...)
+ */
 public class SQLCustomException extends RuntimeException {
 
     public SQLCustomException() {

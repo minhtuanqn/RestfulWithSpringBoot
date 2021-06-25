@@ -1,7 +1,7 @@
 package com.customexception;
 
 /**
- * Custom exception for no such field for sort by
+ * Custom exception for no such name of field in a class
  */
 public class NotFoundFieldOfClassException extends ClassCustomException{
 

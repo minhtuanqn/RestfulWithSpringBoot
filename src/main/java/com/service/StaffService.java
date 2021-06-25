@@ -5,7 +5,6 @@ import com.customexception.DuplicatedEntityException;
 import com.customexception.NoSuchEntityException;
 import com.entity.DepartmentEntity;
 import com.entity.StaffEntity;
-import com.metamodel.DepartmentEntity_;
 import com.metamodel.StaffEntity_;
 import com.model.DepartmentModel;
 import com.model.PaginationModel;

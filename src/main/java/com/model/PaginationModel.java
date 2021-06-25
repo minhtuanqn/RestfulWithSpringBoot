@@ -1,9 +1,5 @@
 package com.model;
 
-import org.springframework.boot.context.properties.bind.DefaultValue;
-
-import javax.validation.constraints.Min;
-
 public class PaginationModel {
 
     private Integer page;
