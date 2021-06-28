@@ -12,8 +12,12 @@ info:
 servers:
   - url: http://localhost:8080
 tags:
+  - name: Department
+    description: Everything abount department
   - name: Staff
     description: Everything about staff
+
+
 paths:
   '/staffs/':
     post:
@@ -32,6 +36,18 @@ paths:
                   type: string
                 lastName:
                   type: string
+                username:
+                  type: string
+                password:
+                  type: string
+                depId:
+                  type: integer
+              example:
+                firstName: "firstName"
+                lastName: "lastName"
+                username: "username"
+                password: "password"
+                depId: 1
           application/xml:
             schema:
               type: object
@@ -40,6 +56,18 @@ paths:
                   type: string
                 lastName:
                   type: string
+                username:
+                  type: string
+                password:
+                  type: string
+                depId:
+                  type: integer
+              example:
+                firstName: "firstName"
+                lastName: "lastName"
+                username: "username"
+                password: "password"
+                depId: 1
       responses:
         '200':
           description: Create new staff success
@@ -53,16 +81,27 @@ paths:
                     example: 1
                   firstName:
                     type: string
-                    example: Tuan
+                    example: "firstName"
                   lastName:
                     type: string
-                    example: Minh
+                    example: "lastName"
+                  username:
+                    type: string
+                    example: "username"
                   createAt:
                     type: object
                     example: "2021-06-10T15:37:24.122193"
                   updatedAt:
                     type: object
                     example: null
+                  deleteAt:
+                    type: object
+                    example: null
+                  department:
+                    type: object
+                    example:
+                      id: 1
+                      name: "ITC"
             application/xml:
               schema:
                 type: object
@@ -72,16 +111,27 @@ paths:
                     example: 1
                   firstName:
                     type: string
-                    example: Tuan
+                    example: "firstName"
                   lastName:
                     type: string
-                    example: Minh
+                    example: "lastName"
+                  username:
+                    type: string
+                    example: "username"
                   createAt:
                     type: object
                     example: "2021-06-10T15:37:24.122193"
                   updatedAt:
                     type: object
                     example: null
+                  deleteAt:
+                    type: object
+                    example: null
+                  department:
+                    type: object
+                    example:
+                      id: 1
+                      name: "ITC"
         '400':
           description: Invalid input
         '403':
@@ -89,7 +139,7 @@ paths:
     get:
       tags:
         - Staff
-      summary: Find existed staffs by condition(paging, sorting)
+      summary: Find existed staffs like searched name
       security:
         - BasicAuth: []
       parameters:
@@ -139,6 +189,12 @@ paths:
                   perPage:
                     type: integer
                     example: 2
+                  total:
+                    type: integer
+                    example: 4
+                  totalPage:
+                    type: integer
+                    example: 2
                   data:
                     type: array
                     items:
@@ -150,21 +206,37 @@ paths:
                           type: string
                         lastName:
                           type: string
+                        username:
+                          type: string
                         createAt:
                           type: object
                         updatedAt:
+                          type: object
+                        deleteAt:
+                          type: object
+                        department:
                           type: object
                       example:
                         - id: 1
                           firstName: Tuan
                           lastName: Minh
+                          username: "tuan"
                           createAt: "2021-06-10T15:37:24.122193"
-                          updatedAt:
+                          updatedAt: null
+                          deleteAt: null
+                          department:
+                            id: 1
+                            name: "ITC"
                         - id: 2
                           firstName: Tran
-                          lastName: Quang
+                          lastName: Quang\
+                          username: "quang"
                           createAt: "2021-06-10T15:37:24.122193"
                           updatedAt: "2021-06-10T15:37:24.122193"
+                          deleteAt: null
+                          department:
+                            id: 1
+                            name: "ITC"
             application/xml:
               schema:
                 type: object
@@ -236,12 +308,23 @@ paths:
                   lastName:
                     type: string
                     example: Minh
+                  username:
+                    type: string
+                    example: tuan
                   createAt:
                     type: object
                     example: "2021-06-10T15:37:24.122193"
                   updatedAt:
                     type: object
                     example: "2021-06-10T15:37:24.678193"
+                  deleteAt:
+                    type: object
+                    example: null
+                  department:
+                    type: object
+                    example:
+                      id: 1
+                      name: "ITC"
             application/xml:
               schema:
                 type: object
@@ -296,12 +379,23 @@ paths:
                   lastName:
                     type: string
                     example: Minh
+                  username:
+                    type: string
+                    example: "tuan"
                   createAt:
                     type: object
                     example: "2021-06-10T15:37:24.122193"
                   updatedAt:
                     type: object
                     example: null
+                  deleteAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122199"
+                  department:
+                    type: object
+                    example:
+                      id: 1
+                      name: "ITC"
             application/xml:
               schema:
                 type: object
@@ -315,12 +409,23 @@ paths:
                   lastName:
                     type: string
                     example: Minh
+                  username:
+                    type: string
+                    example: "tuan"
                   createAt:
                     type: object
                     example: "2021-06-10T15:37:24.122193"
                   updatedAt:
                     type: object
                     example: null
+                  deleteAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122199"
+                  department:
+                    type: object
+                    example:
+                      id: 1
+                      name: "ITC"
 
         '404':
           description: Not found
@@ -348,16 +453,38 @@ paths:
               properties:
                 firstName:
                   type: string
+                  example: "updatedFirstname"
                 lastName:
                   type: string
+                  example: "updatedLastname"
+                username:
+                  type: string
+                  example: "updatedUsername"
+                password:
+                  type: string
+                  example: "updatedPassword"
+                depId:
+                  type: integer
+                  example: 2
           application/xml:
             schema:
               type: object
               properties:
                 firstName:
                   type: string
+                  example: "updatedFirstname"
                 lastName:
                   type: string
+                  example: "updatedLastname"
+                username:
+                  type: string
+                  example: "updatedUsername"
+                password:
+                  type: string
+                  example: "updatedPassword"
+                depId:
+                  type: integer
+                  example: 2
       responses:
         '200':
           description: Update staff success
@@ -371,16 +498,27 @@ paths:
                     example: 1
                   firstName:
                     type: string
-                    example: Tuan
+                    example: "updatedFirstname"
                   lastName:
                     type: string
-                    example: Minh
+                    example: "updatedLastname"
+                  username:
+                    type: string
+                    example: "updatedUsername"
                   createAt:
                     type: object
                     example: "2021-06-10T15:37:24.122193"
                   updatedAt:
                     type: object
                     example: "2021-06-10T15:37:24.678193"
+                  deleteAt:
+                    type: object
+                    example: null
+                  department:
+                    type: object
+                    example:
+                      id: 2
+                      name: "ACC"
             application/xml:
               schema:
                 type: object
@@ -390,15 +528,563 @@ paths:
                     example: 1
                   firstName:
                     type: string
-                    example: Tuan
+                    example: "updatedFirstname"
                   lastName:
                     type: string
-                    example: Minh
+                    example: "updatedLastname"
+                  username:
+                    type: string
+                    example: "updatedUsername"
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updatedAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.678193"
+                  deleteAt:
+                    type: object
+                    example: null
+                  department:
+                    type: object
+                    example:
+                      id: 2
+                      name: "ACC"
         '404':
           description: Not found
         '403':
           description: Forbidden Error
+  '/departments/':
+    post:
+      tags:
+        - Department
+      summary: Create new Department
+      security:
+        - BasicAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Tuan
+          application/xml:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Tuan
+      responses:
+        '200':
+          description: Create new department successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: Tuan
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updateAt:
+                    type: object
+                    example: null
+                  deleteAt:
+                    type: string
+                    example: null
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: Tuan
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updateAt:
+                    type: object
+                    example: null
+                  deleteAt:
+                    type: object
+                    example: null
+        '400':
+          description: Invalid input
+        '403':
+          description: Forbidden Error
+    get:
+      tags:
+        - Department
+      summary: Find departments like name
+      security:
+        - BasicAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Number of paging
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+        - name: perPage
+          in: query
+          description: Number of object per page
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+        - name: sortBy
+          in: query
+          description: Type for sorting
+          required: false
+          schema:
+            type: string
+        - name: sortType
+          in: query
+          description: descending or ascending
+          required: false
+          schema:
+            type: string
+        - name: searchedName
+          in: query
+          description: searched value
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Found department
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    example: 0
+                  perPage:
+                    type: integer
+                    example: 2
+                  total:
+                    type: integer
+                    example: 2
+                  totalPage:
+                    type: integer
+                    example: 2
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        createAt:
+                          type: object
+                        updateAt:
+                          type: object
+                        deleteAt:
+                          type: object
+                      example:
+                        - id: 1
+                          name: "LKJ"
+                          createAt: "2021-06-10T15:37:24.122193"
+                          updateAt: null
+                          deleteAt: null
+                        - id: 2
+                          name: "HKT"
+                          createAt: "2021-06-10T15:37:24.122193"
+                          updateAt: null
+                          deleteAt: null
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    example: 0
+                  perPage:
+                    type: integer
+                    example: 2
+                  total:
+                    type: integer
+                    example: 2
+                  totalPage:
+                    type: integer
+                    example: 2
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        createAt:
+                          type: object
+                        updateAt:
+                          type: object
+                        deleteAt:
+                          type: object
+                      example:
+                        - id: 1
+                          name: "LKJ"
+                          createAt: "2021-06-10T15:37:24.122193"
+                          updateAt: null
+                          deleteAt: null
+                        - id: 2
+                          name: "HKT"
+                          createAt: "2021-06-10T15:37:24.122193"
+                          updateAt: null
+                          deleteAt: null
+        '400':
+          description: Invalid input
+        '403':
+          description: Forbidden Error
+  '/departments/{id}':
+    put:
+      tags:
+        - Department
+      summary: Update Department
+      security:
+        - BasicAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of department
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: updatedName
+          application/xml:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: updatedName
+      responses:
+        '200':
+          description: Update department successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: updatedName
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updateAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  deleteAt:
+                    type: string
+                    example: null
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: updatedName
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updateAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  deleteAt:
+                    type: object
+                    example: null
+        '400':
+          description: Invalid input
+        '403':
+          description: Forbidden Error
+    delete:
+      tags:
+        - Department
+      summary: Delete a Department
+      security:
+        - BasicAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of department
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+      responses:
+        '200':
+          description: Delete department successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: Tuan
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updateAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122197"
+                  deleteAt:
+                    type: string
+                    example: "2021-06-10T15:37:24.122199"
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: Tuan
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updateAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  deleteAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122199"
+        '400':
+          description: Invalid input
+        '403':
+          description: Forbidden Error
+    get:
+      tags:
+        - Department
+      summary: Find a Department by id
+      security:
+        - BasicAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of department
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+      responses:
+        '200':
+          description: Existed department
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: Tuan
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updateAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122197"
+                  deleteAt:
+                    type: string
+                    example: null
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: Tuan
+                  createAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  updateAt:
+                    type: object
+                    example: "2021-06-10T15:37:24.122193"
+                  deleteAt:
+                    type: object
+                    example: null
+        '400':
+          description: Invalid input
+        '403':
+          description: Forbidden Error
+  '/departments/{id}/staffs':
+    get:
+      tags:
+        - Department
+      summary: Find a Staffs by Department id
+      security:
+        - BasicAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of department
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+        - name: page
+          in: query
+          description: Number of paging
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+        - name: perPage
+          in: query
+          description: Number of object per page
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+        - name: sortBy
+          in: query
+          description: Type for sorting
+          required: false
+          schema:
+            type: string
+        - name: sortType
+          in: query
+          description: descending or ascending
+          required: false
+          schema:
+            type: string
 
+      responses:
+        '200':
+          description: Found staff
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    example: 1
+                  perPage:
+                    type: integer
+                    example: 2
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        firstName:
+                          type: string
+                        lastName:
+                          type: string
+                        createAt:
+                          type: object
+                        updatedAt:
+                          type: object
+                        username:
+                          type: string
+                      example:
+                        - id: 1
+                          firstName: Tuan
+                          lastName: Minh
+                          createAt: "2021-06-10T15:37:24.122193"
+                          updatedAt: null
+                          deleteAt: null
+                          username: "test1"
+                        - id: 2
+                          firstName: Tran
+                          lastName: Quang
+                          createAt: "2021-06-10T15:37:24.122193"
+                          updateAt: "2021-06-10T15:37:24.122193"
+                          deleteAt: null
+                          username: "test2"
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    example: 1
+                  perPage:
+                    type: integer
+                    example: 2
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        firstName:
+                          type: string
+                        lastName:
+                          type: string
+                        createAt:
+                          type: object
+                        updatedAt:
+                          type: object
+                        username:
+                          type: string
+                      example:
+                        - id: 1
+                          firstName: Tuan
+                          lastName: Minh
+                          createAt: "2021-06-10T15:37:24.122193"
+                          updatedAt: "2021-06-10T15:37:24.122193"
+                          deleteAt: null
+                          username: "test1"
+                        - id: 2
+                          firstName: Tran
+                          lastName: Quang
+                          createAt: "2021-06-10T15:37:24.122193"
+                          updatedAt: "2021-06-10T15:37:24.122193"
+                          deleteAt: null
+                          username: "test2"
+
+        '400':
+          description: Invalid input
+        '403':
+          description: Forbidden Error
 components:
   securitySchemes:
     BasicAuth:
