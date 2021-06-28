@@ -11,19 +11,17 @@ import org.junit.jupiter.api.Assertions;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class TestsUtils {
-    public static JSONObject createJsonObj() throws JSONException {
+    public static JSONObject createStaffJsonObj() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("firstName", "firstName");
         jsonObject.put("lastName", "lastName");
         jsonObject.put("username", "username");
         jsonObject.put("password", "password");
         jsonObject.put("id", 1);
+        jsonObject.put("depId", 1);
         return jsonObject;
     }
 
@@ -77,6 +75,16 @@ public class TestsUtils {
         return staffResource;
     }
 
+    public static ResourceModel<DepartmentModel> createDepartmentResource(int total, int page, int perPage, int totalPage, List<DepartmentModel> modelList) {
+        ResourceModel<DepartmentModel> resourceModel = new ResourceModel<>();
+        resourceModel.setTotal(total);
+        resourceModel.setPage(page);
+        resourceModel.setPerPage(perPage);
+        resourceModel.setTotalPage(totalPage);
+        resourceModel.setData(modelList);
+        return resourceModel;
+    }
+
     public static boolean compareTwoDepartment(DepartmentModel expect, DepartmentModel actual) {
         if(expect == null) {
             Assertions.assertEquals(expect, actual);
@@ -92,11 +100,34 @@ public class TestsUtils {
         Assertions.assertEquals(expected.getId(), actual.getId());
         Assertions.assertEquals(expected.getFirstName(), expected.getFirstName());
         Assertions.assertEquals(expected.getLastName(), actual.getLastName());
-        compareTwoDepartment(expected.getDepartmentModel(), actual.getDepartmentModel());
+//        compareTwoDepartment(expected.getDepartmentModel(), actual.getDepartmentModel());
         return true;
     }
 
-    public static boolean compareTwoResource(ResourceModel<StaffModel> expected, ResourceModel<StaffModel> actual) {
+    public static StaffModel convertToStaff(LinkedHashMap<String, Object> map) {
+        Integer id = (Integer) map.get("id");
+        String firstName = (String) map.get("firstName");
+        String lastName = (String) map.get("lastName");
+        String userName = (String) map.get("username");
+        StaffModel staffModel = new StaffModel();
+        staffModel.setId(id);
+        staffModel.setUsername(userName);
+        staffModel.setFirstName(firstName);
+        staffModel.setLastName(lastName);
+        return staffModel;
+    }
+
+    public static DepartmentModel convertToDepartment(LinkedHashMap<String, Object> map) {
+        Integer id = (Integer) map.get("id");
+        String name = (String) map.get("name");
+        DepartmentModel departmentModel = new DepartmentModel();
+        departmentModel.setId(id);
+        departmentModel.setName(name);
+        return departmentModel;
+    }
+
+    public static boolean compareTwoResourceStaff(ResourceModel<StaffModel> expected,
+                                             ResourceModel<StaffModel> actual) {
         Assertions.assertEquals(expected.getPage(), actual.getPage());
         Assertions.assertEquals(expected.getPerPage(), actual.getPerPage());
         Assertions.assertEquals(expected.getTotal(), actual.getTotal());
@@ -109,6 +140,52 @@ public class TestsUtils {
         }
         return true;
     }
+
+    public static boolean compareTwoResourceDepartment(ResourceModel<DepartmentModel> expected,
+                                             ResourceModel<DepartmentModel> actual) {
+        Assertions.assertEquals(expected.getPage(), actual.getPage());
+        Assertions.assertEquals(expected.getPerPage(), actual.getPerPage());
+        Assertions.assertEquals(expected.getTotal(), actual.getTotal());
+        Assertions.assertEquals(expected.getTotalPage(), actual.getTotalPage());
+        List<DepartmentModel> expectedList = expected.getData();
+        List<DepartmentModel> actualList = actual.getData();
+        int expectedListSize = expectedList.size();
+        for(int count = 0; count < expectedListSize; count++) {
+            compareTwoDepartment(expectedList.get(count), actualList.get(count));
+        }
+        return true;
+    }
+
+    public static ResourceModel<StaffModel> convertToStaffResource(ResourceModel<LinkedHashMap<String, Object>> resourceModel) {
+        ResourceModel<StaffModel> staffModelResourceModel = new ResourceModel<>();
+        List<StaffModel> staffModelList = new ArrayList<>();
+        List<LinkedHashMap<String, Object>> actualMap = resourceModel.getData();
+        for(int count = 0; count < actualMap.size(); count++) {
+            staffModelList.add(convertToStaff(actualMap.get(count)));
+        }
+        staffModelResourceModel.setData(staffModelList);
+        staffModelResourceModel.setPage(resourceModel.getPage());
+        staffModelResourceModel.setPerPage(resourceModel.getPerPage());
+        staffModelResourceModel.setTotal(resourceModel.getTotal());
+        staffModelResourceModel.setTotalPage(resourceModel.getTotalPage());
+        return staffModelResourceModel;
+    }
+
+    public static ResourceModel<DepartmentModel> convertToDepartmentResource(ResourceModel<LinkedHashMap<String, Object>> resourceModel) {
+        ResourceModel<DepartmentModel> depModelResourceModel = new ResourceModel<>();
+        List<DepartmentModel> departmentModelList = new ArrayList<>();
+        List<LinkedHashMap<String, Object>> actualMap = resourceModel.getData();
+        for(int count = 0; count < actualMap.size(); count++) {
+            departmentModelList.add(convertToDepartment(actualMap.get(count)));
+        }
+        depModelResourceModel.setData(departmentModelList);
+        depModelResourceModel.setPage(resourceModel.getPage());
+        depModelResourceModel.setPerPage(resourceModel.getPerPage());
+        depModelResourceModel.setTotal(resourceModel.getTotal());
+        depModelResourceModel.setTotalPage(resourceModel.getTotalPage());
+        return depModelResourceModel;
+    }
+
 
 
 }

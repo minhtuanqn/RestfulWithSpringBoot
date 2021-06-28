@@ -16,7 +16,6 @@ import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -84,7 +83,7 @@ public class DepartmentServiceTests {
 
         DepartmentEntity savedEntity = new DepartmentEntity(departmentModel);
         Optional<DepartmentEntity> optional = Mockito.mock(Optional.class);
-        when(departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(anyInt())).thenReturn(optional);
+        when(departmentRepository.findDepartmentById(anyInt())).thenReturn(optional);
         when(optional.orElseThrow(any())).thenReturn(savedEntity);
         when(departmentRepository.save(any())).thenReturn(savedEntity);
 
@@ -120,7 +119,7 @@ public class DepartmentServiceTests {
 
         DepartmentEntity savedEntity = new DepartmentEntity(departmentModel);
         Optional<DepartmentEntity> optional = Mockito.mock(Optional.class);
-        when(departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(anyInt())).thenReturn(optional);
+        when(departmentRepository.findDepartmentById(anyInt())).thenReturn(optional);
         when(optional.orElseThrow(any())).thenReturn(savedEntity);
 
         DepartmentModel expectedModel = createDepartmentModel();
@@ -138,7 +137,7 @@ public class DepartmentServiceTests {
         departmentModel.setUpdateAt(null);
 
         Optional<DepartmentEntity> optional = Mockito.mock(Optional.class);
-        when(departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(any())).thenReturn(optional);
+        when(departmentRepository.findDepartmentById(any())).thenReturn(optional);
         when(optional.orElseThrow(any())).thenThrow(NoSuchEntityException.class);
 
         assertThrows(NoSuchEntityException.class, ()
@@ -156,7 +155,7 @@ public class DepartmentServiceTests {
 
         DepartmentEntity savedEntity = new DepartmentEntity(departmentModel);
         Optional<DepartmentEntity> optional = Mockito.mock(Optional.class);
-        when(departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(any())).thenReturn(optional);
+        when(departmentRepository.findDepartmentById(any())).thenReturn(optional);
         when(optional.orElseThrow(any())).thenReturn(new DepartmentEntity(createDepartmentModel()));
         when(departmentRepository.existsDepartmentEntitiesByNameAndIdNot(anyString(), anyInt())).thenReturn(false);
         when(departmentRepository.save(any())).thenReturn(savedEntity);
@@ -181,7 +180,7 @@ public class DepartmentServiceTests {
         //Find existed department entity
         DepartmentEntity savedEntity = new DepartmentEntity(departmentModel);
         Optional<DepartmentEntity> optional = Mockito.mock(Optional.class);
-        when(departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(any())).thenReturn(optional);
+        when(departmentRepository.findDepartmentById(any())).thenReturn(optional);
         when(optional.orElseThrow(any())).thenReturn(savedEntity);
         when(departmentRepository.existsDepartmentEntitiesByNameAndIdNot(anyString(), anyInt())).thenReturn(true);
 
@@ -233,11 +232,38 @@ public class DepartmentServiceTests {
         ResourceModel<StaffModel> actualResource = new DepartmentService(departmentRepository, staffRepository).
                 findAllStaffByDepartmentId(1, new PaginationModel(0, 1, "firstName", "asc"));
 
+        List<StaffModel> actualStaffList = actualResource.getData();
+        for (StaffModel model: actualStaffList) {
+            model.setDepartmentModel(createDepartmentModel());
+            model.setDepId(1);
+        }
+
         List<StaffModel> modelList = new ArrayList<>();
         StaffModel expectModel = createStaffModel();
         modelList.add(expectModel);
         ResourceModel<StaffModel> expectedResource = createStaffResource(1, 0,1, 1, modelList);
-        compareTwoResource(expectedResource, actualResource);
+        compareTwoResourceStaff(expectedResource, actualResource);
+    }
+
+    /**
+     * Find departments like name then return result
+     */
+    @Test
+    public void when_findDepartmentLikeNameSortByAsc_thenReturnResourceOfListOfStaffsByAsc() {
+        List<DepartmentEntity> entityList = new ArrayList<>();
+        entityList.add(new DepartmentEntity(createDepartmentModel()));
+        Page<DepartmentEntity> entityPage = new PageImpl<>(entityList);
+
+        when(departmentRepository.findDepartmentEntityByNameContainsAndDeleteAtNull(anyString(), any())).thenReturn(entityPage);
+
+        ResourceModel<DepartmentModel> actualResource = new DepartmentService(departmentRepository, staffRepository).
+                findDepartmentLikeName("", new PaginationModel(0, 1, "name", "asc"));
+
+        List<DepartmentModel> modelList = new ArrayList<>();
+        DepartmentModel expectModel = createDepartmentModel();
+        modelList.add(expectModel);
+        ResourceModel<DepartmentModel> expectedResource = createDepartmentResource(1, 0,1, 1, modelList);
+        compareTwoResourceDepartment(expectedResource, actualResource);
     }
 
 }

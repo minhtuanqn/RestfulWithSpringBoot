@@ -4,16 +4,13 @@ import com.customexception.DuplicatedEntityException;
 import com.customexception.NoSuchEntityException;
 import com.entity.DepartmentEntity;
 import com.entity.StaffEntity;
-import com.model.DepartmentModel;
 import com.model.PaginationModel;
 import com.model.ResourceModel;
 import com.model.StaffModel;
 import com.repository.DepartmentRepository;
 import com.repository.StaffRepository;
-import com.service.DepartmentService;
 import com.service.StaffService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +41,7 @@ public class StaffServiceTests {
         staffModel.setUpdatedAt(null);
 
         Optional<DepartmentEntity> optional = Mockito.mock(Optional.class);
-        when(departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(anyInt())).thenReturn(optional);
+        when(departmentRepository.findDepartmentById(anyInt())).thenReturn(optional);
         when(optional.orElseThrow(any())).thenReturn(new DepartmentEntity(createDepartmentModel()));
 
         when(staffRepository.existsStaffEntitiesByUsername(anyString())).thenReturn(false);
@@ -63,7 +60,7 @@ public class StaffServiceTests {
      */
     @Test
     public void when_createStaffWithDoesNotExistDepartment_thenThrowNoSuchEntityException() {
-        when(departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(anyInt())).thenThrow(NoSuchEntityException.class);
+        when(departmentRepository.findDepartmentById(anyInt())).thenThrow(NoSuchEntityException.class);
 
         StaffModel paramModel = createStaffModel();
         paramModel.setCreateAt(null);
@@ -78,7 +75,7 @@ public class StaffServiceTests {
     @Test
     public void when_createStaffWithExistUsername_thenThrowDuplicatedEntityException() {
         Optional<DepartmentEntity> optional = Mockito.mock(Optional.class);
-        when(departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(anyInt())).thenReturn(optional);
+        when(departmentRepository.findDepartmentById(anyInt())).thenReturn(optional);
         when(optional.orElseThrow()).thenReturn(new DepartmentEntity(createDepartmentModel()));
         when(staffRepository.existsStaffEntitiesByUsername(anyString())).thenReturn(true);
 
@@ -102,12 +99,12 @@ public class StaffServiceTests {
         Optional<DepartmentEntity> departmentOptional = Mockito.mock(Optional.class);
         DepartmentEntity existedDepEntity = new DepartmentEntity(createDepartmentModel());
         existedDepEntity.setStaffList(createStaffEntityList());
-        when(departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(anyInt())).thenReturn(departmentOptional);
+        when(departmentRepository.findDepartmentById(anyInt())).thenReturn(departmentOptional);
         when(departmentOptional.orElseThrow(any())).thenReturn(existedDepEntity);
 
         //Check exist or not staff
         Optional<StaffEntity> staffOptional = Mockito.mock(Optional.class);
-        when(staffRepository.findStaffEntityByIdAndDeleteAtNull(anyInt())).thenReturn(staffOptional);
+        when(staffRepository.findStaffById(anyInt())).thenReturn(staffOptional);
         when(staffOptional.orElseThrow(any())).thenReturn(new StaffEntity(createStaffModel(), existedDepEntity));
 
         //Check exist username of staff
@@ -129,7 +126,7 @@ public class StaffServiceTests {
      */
     @Test
     public void when_updateStaffWithDoesNotExistDepartment_thenThrowNoSuchEntityException() {
-        when(departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(anyInt())).thenThrow(NoSuchEntityException.class);
+        when(departmentRepository.findDepartmentById(anyInt())).thenThrow(NoSuchEntityException.class);
 
         StaffModel paramModel = createStaffModel();
         paramModel.setCreateAt(null);
@@ -144,11 +141,11 @@ public class StaffServiceTests {
     @Test
     public void when_updatedStaffWithExistUsername_thenThrowDuplicatedEntityException() {
         Optional<DepartmentEntity> optionalDepartmentEntity = Mockito.mock(Optional.class);
-        when(departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(anyInt())).thenReturn(optionalDepartmentEntity);
+        when(departmentRepository.findDepartmentById(anyInt())).thenReturn(optionalDepartmentEntity);
         when(optionalDepartmentEntity.orElseThrow(any())).thenReturn(new DepartmentEntity(createDepartmentModel()));
 
         Optional<StaffEntity> optionalStaffEntity = Mockito.mock(Optional.class);
-        when(staffRepository.findStaffEntityByIdAndDeleteAtNull(anyInt())).thenReturn(optionalStaffEntity);
+        when(staffRepository.findStaffById(anyInt())).thenReturn(optionalStaffEntity);
         when(optionalStaffEntity.orElseThrow(any())).thenReturn(new StaffEntity(createStaffModel(), new DepartmentEntity(createDepartmentModel())));
 
         when(staffRepository.existsStaffEntityByIdNotAndUsernameEquals(any(), anyString())).thenReturn(true);
@@ -166,11 +163,11 @@ public class StaffServiceTests {
     @Test
     public void when_updateDoesNotExistStaff_thenThrowNoSuchEntityException() {
         Optional<DepartmentEntity> optionalDepartmentEntity = Mockito.mock(Optional.class);
-        when(departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(anyInt())).thenReturn(optionalDepartmentEntity);
+        when(departmentRepository.findDepartmentById(anyInt())).thenReturn(optionalDepartmentEntity);
         when(optionalDepartmentEntity.orElseThrow(any())).thenReturn(new DepartmentEntity(createDepartmentModel()));
 
         Optional<StaffEntity> optionalStaffEntity = Mockito.mock(Optional.class);
-        when(staffRepository.findStaffEntityByIdAndDeleteAtNull(anyInt())).thenReturn(optionalStaffEntity);
+        when(staffRepository.findStaffById(anyInt())).thenReturn(optionalStaffEntity);
         when(optionalStaffEntity.orElseThrow(any())).thenThrow(NoSuchEntityException.class);
 
         StaffModel paramModel = createStaffModel();
@@ -188,7 +185,7 @@ public class StaffServiceTests {
     public void when_findStaffById_thenReturnStaff() {
         StaffModel staffModel = createStaffModel();
         Optional<StaffEntity> existEntity = Mockito.mock(Optional.class);
-        when(staffRepository.findStaffEntityByIdAndDeleteAtNull(anyInt())).thenReturn(existEntity);
+        when(staffRepository.findStaffById(anyInt())).thenReturn(existEntity);
         when(existEntity.orElseThrow(any())).thenReturn(new StaffEntity(createStaffModel(), new DepartmentEntity(createDepartmentModel())));
 
         StaffModel actualModel = new StaffService(staffRepository, departmentRepository, passwordEncoder).findById(1);
@@ -202,7 +199,7 @@ public class StaffServiceTests {
     @Test
     public void when_findDoesNotExistStaffById_thenThrowNoSuchEntityException() {
         Optional<StaffEntity> existEntity = Mockito.mock(Optional.class);
-        when(staffRepository.findStaffEntityByIdAndDeleteAtNull(anyInt())).thenThrow(NoSuchEntityException.class);
+        when(staffRepository.findStaffById(anyInt())).thenThrow(NoSuchEntityException.class);
 
         assertThrows(NoSuchEntityException.class,
                 () -> new StaffService(staffRepository, departmentRepository, passwordEncoder).findById(1));
@@ -215,7 +212,7 @@ public class StaffServiceTests {
     public void when_deleteStaff_thenDeleteSuccessfully() {
         StaffModel staffModel = createStaffModel();
         Optional<StaffEntity> existEntity = Mockito.mock(Optional.class);
-        when(staffRepository.findStaffEntityByIdAndDeleteAtNull(anyInt())).thenReturn(existEntity);
+        when(staffRepository.findStaffById(anyInt())).thenReturn(existEntity);
         when(existEntity.orElseThrow(any())).thenReturn(new StaffEntity(createStaffModel(), new DepartmentEntity(createDepartmentModel())));
 
         when(staffRepository.save(any())).thenReturn(new StaffEntity(createStaffModel(), new DepartmentEntity(createDepartmentModel())));
@@ -232,7 +229,7 @@ public class StaffServiceTests {
     @Test
     public void when_deleteSDoesNotExistStaff_thenReturnNoSuchEntityException() {
         Optional<StaffEntity> existEntity = Mockito.mock(Optional.class);
-        when(staffRepository.findStaffEntityByIdAndDeleteAtNull(anyInt())).thenThrow(NoSuchEntityException.class);
+        when(staffRepository.findStaffById(anyInt())).thenThrow(NoSuchEntityException.class);
         when(existEntity.isPresent()).thenReturn(false);
         assertThrows(NoSuchEntityException.class,
                 () -> new StaffService(staffRepository, departmentRepository, passwordEncoder).deleteStaffById(1));
@@ -261,7 +258,7 @@ public class StaffServiceTests {
         expectedModel.setDepartmentModel(createDepartmentModel());
         modelList.add(expectedModel);
         ResourceModel<StaffModel> expectedResource = createStaffResource(2, 0, 1, 2, modelList);
-        compareTwoResource(expectedResource, actualResource);
+        compareTwoResourceStaff(expectedResource, actualResource);
     }
 
     /**
@@ -291,6 +288,6 @@ public class StaffServiceTests {
         expectModel.setDepartmentModel(createDepartmentModel());
         modelList.add(expectModel);
         ResourceModel<StaffModel> expectedResource = createStaffResource(2, 0,1, 2, modelList);
-        compareTwoResource(expectedResource, actualResource);
+        compareTwoResourceStaff(expectedResource, actualResource);
     }
 }

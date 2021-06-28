@@ -23,12 +23,12 @@ public class PaginationConvertor<M, E> {
      * @param defaultSortBy
      * @return
      */
-    public Pageable covertToPageable(PaginationModel pagination, String defaultSortBy) {
+    public Pageable covertToPageable(PaginationModel pagination, String defaultSortBy, Class<E> classType) {
 
         // Define sort by field for paging
         String sortBy = defaultSortBy;
         if (pagination.getSortBy() != null) {
-            if (!checkExistFieldOfClass(StaffEntity.class, pagination.getSortBy())) {
+            if (!checkExistFieldOfClass(classType, pagination.getSortBy())) {
                 throw new NotFoundFieldOfClassException("Can not define sortBy");
             }
             sortBy = pagination.getSortBy();

@@ -71,7 +71,7 @@ public class DepartmentService {
     @Transactional
     public DepartmentModel deleteDepartment(Integer id) {
         //Find department with id
-        Optional<DepartmentEntity> deletedDepartmentOptional = departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(id);
+        Optional<DepartmentEntity> deletedDepartmentOptional = departmentRepository.findDepartmentById(id);
         DepartmentEntity deletedDepartmentEntity = deletedDepartmentOptional
                 .orElseThrow(() -> new NoSuchEntityException("Not found department"));
 
@@ -93,7 +93,7 @@ public class DepartmentService {
      */
     public DepartmentModel findDepartmentById(Integer id) {
         //Find department with id
-        Optional<DepartmentEntity> searchedDepartmentOptional = departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(id);
+        Optional<DepartmentEntity> searchedDepartmentOptional = departmentRepository.findDepartmentById(id);
         DepartmentEntity departmentEntity = searchedDepartmentOptional
                 .orElseThrow(() -> new NoSuchEntityException("Not found department"));
         return new DepartmentModel(departmentEntity);
@@ -109,7 +109,7 @@ public class DepartmentService {
      */
     public DepartmentModel updateDepartment(Integer departmentId, DepartmentModel model) {
         //Find department with id
-        Optional<DepartmentEntity> searchedDepartmentOptional = departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(departmentId);
+        Optional<DepartmentEntity> searchedDepartmentOptional = departmentRepository.findDepartmentById(departmentId);
         DepartmentEntity searchedDepartmentEntity = searchedDepartmentOptional
                 .orElseThrow(() -> new NoSuchEntityException("Not found department"));
 
@@ -146,7 +146,7 @@ public class DepartmentService {
         }
 
         String defaultSortBy = "firstName";
-        Pageable pageable = paginationConvertor.covertToPageable(pagination, defaultSortBy);
+        Pageable pageable = paginationConvertor.covertToPageable(pagination, defaultSortBy, StaffEntity.class);
 
         //Find all staff belong to a department with id
         Page<StaffEntity> staffEntityPage = staffRepository.findStaffEntitiesByDepartmentEntityIdEquals(id, pageable);
@@ -175,7 +175,7 @@ public class DepartmentService {
 
         //Prepare pageable for query
         String defaultSortBy = "name";
-        Pageable pageable = paginationConvertor.covertToPageable(pagination, defaultSortBy);
+        Pageable pageable = paginationConvertor.covertToPageable(pagination, defaultSortBy, DepartmentEntity.class);
 
         //Query from DB
         Page<DepartmentEntity> departmentsPage = departmentRepository.findDepartmentEntityByNameContainsAndDeleteAtNull(searchedValue, pageable);

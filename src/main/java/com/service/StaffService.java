@@ -53,7 +53,7 @@ public class StaffService {
      * @return response staff model
      */
     public StaffModel createStaff(StaffModel model) {
-        Optional<DepartmentEntity> searchedDepartmentOptional = departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(model.getDepId());
+        Optional<DepartmentEntity> searchedDepartmentOptional = departmentRepository.findDepartmentById(model.getDepId());
         DepartmentEntity searchedDepartmentEntity = searchedDepartmentOptional
                 .orElseThrow(() -> new NoSuchEntityException("Not found department"));
 
@@ -92,12 +92,12 @@ public class StaffService {
     public StaffModel updateStaff(StaffModel staffModel) {
 
         //Find existed department by id
-        Optional<DepartmentEntity> searchedDepOptional = departmentRepository.findDepartmentEntityByIdAndDeleteAtNull(staffModel.getDepId());
+        Optional<DepartmentEntity> searchedDepOptional = departmentRepository.findDepartmentById(staffModel.getDepId());
         DepartmentEntity searchedDepEntity = searchedDepOptional
                 .orElseThrow(() -> new NoSuchEntityException("Not found updated department"));
 
         //Find exist staff by id in DB
-        Optional<StaffEntity> existStaffOptional = repository.findStaffEntityByIdAndDeleteAtNull(staffModel.getId());
+        Optional<StaffEntity> existStaffOptional = repository.findStaffById(staffModel.getId());
         StaffEntity existStaffEntity = existStaffOptional
                 .orElseThrow(() -> new NoSuchEntityException("Not found staff"));
 
@@ -133,7 +133,7 @@ public class StaffService {
     public StaffModel deleteStaffById(Integer staffId) {
 
         //Find exist staff in DB
-        Optional<StaffEntity> existEntityOptional = repository.findStaffEntityByIdAndDeleteAtNull(staffId);
+        Optional<StaffEntity> existEntityOptional = repository.findStaffById(staffId);
         StaffEntity existEntity = existEntityOptional
                 .orElseThrow(() -> new NoSuchEntityException("Not found staff"));
 
@@ -154,7 +154,7 @@ public class StaffService {
      */
     public StaffModel findById(Integer id) {
         //Find exist staff in DB
-        Optional<StaffEntity> searchedStaffOptional = repository.findStaffEntityByIdAndDeleteAtNull(id);
+        Optional<StaffEntity> searchedStaffOptional = repository.findStaffById(id);
         StaffEntity searchedStaffEntity = searchedStaffOptional
                 .orElseThrow(() -> new NoSuchEntityException("Not found staff"));
 
@@ -204,7 +204,7 @@ public class StaffService {
 
         //Create pageable for pagination
         String defaultSortBy = "firstName";
-        Pageable pageable = paginationConvertor.covertToPageable(pagination, defaultSortBy);
+        Pageable pageable = paginationConvertor.covertToPageable(pagination, defaultSortBy, StaffEntity.class);
 
         //Find data in DB
         Page<StaffEntity> entityPage = repository.findAll(containFirstname(searchedName).and(containsNullDeleteAt())
