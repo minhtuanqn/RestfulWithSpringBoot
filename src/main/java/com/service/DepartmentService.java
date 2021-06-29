@@ -5,6 +5,8 @@ import com.customexception.DuplicatedEntityException;
 import com.customexception.NoSuchEntityException;
 import com.entity.DepartmentEntity;
 import com.entity.StaffEntity;
+import com.metamodel.DepartmentEntity_;
+import com.metamodel.StaffEntity_;
 import com.model.DepartmentModel;
 import com.model.PaginationModel;
 import com.model.ResourceModel;
@@ -15,8 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -149,7 +154,7 @@ public class DepartmentService {
         Pageable pageable = paginationConvertor.covertToPageable(pagination, defaultSortBy, StaffEntity.class);
 
         //Find all staff belong to a department with id
-        Page<StaffEntity> staffEntityPage = staffRepository.findStaffEntitiesByDepartmentEntityIdEquals(id, pageable);
+        Page<StaffEntity> staffEntityPage = staffRepository.findAll(containsNullDeleteAtOfDep().and(equalsDepId(id)), pageable);
 
         //Convert model list to entity list
         List<StaffModel> staffModelList = new ArrayList<>();
@@ -161,6 +166,34 @@ public class DepartmentService {
         resource.setData(staffModelList);
         paginationConvertor.buildPagination(pagination, staffEntityPage, resource);
         return resource;
+    }
+
+    private Specification<DepartmentEntity> containName(String searchedName) {
+        return (root, query, criteriaBuilder) -> {
+            String pattern = "%" + searchedName + "%";
+            return criteriaBuilder.like(root.get(DepartmentEntity_.NAME), pattern);
+        };
+    }
+
+    private Specification<DepartmentEntity> containsNullDeleteAt() {
+        return (root, query, criteriaBuilder) -> {
+            return criteriaBuilder.isNull(root.get(DepartmentEntity_.DELETE_AT));
+        };
+    }
+
+    private Specification<StaffEntity> equalsDepId(Integer depId) {
+        return (root, query, criteriaBuilder) -> {
+            return criteriaBuilder.equal(root.get(StaffEntity_.DEP_ID), depId);
+        };
+    }
+
+    private Specification<StaffEntity> containsNullDeleteAtOfDep() {
+        return (root, query, criteriaBuilder) -> {
+            Join<StaffEntity, DepartmentEntity> staffJoins = root.join(StaffEntity_.DEP_ID);
+            Predicate equalPredicate = criteriaBuilder.isNull(staffJoins.get(DepartmentEntity_.DELETE_AT));
+            query.distinct(true);
+            return equalPredicate;
+        };
     }
 
     /**
@@ -178,7 +211,7 @@ public class DepartmentService {
         Pageable pageable = paginationConvertor.covertToPageable(pagination, defaultSortBy, DepartmentEntity.class);
 
         //Query from DB
-        Page<DepartmentEntity> departmentsPage = departmentRepository.findDepartmentEntityByNameContainsAndDeleteAtNull(searchedValue, pageable);
+        Page<DepartmentEntity> departmentsPage = departmentRepository.findAll(containName(searchedValue).and(containsNullDeleteAt()), pageable);
 
         //Convert to list of department model
         List<DepartmentModel> modelList = new ArrayList<>();

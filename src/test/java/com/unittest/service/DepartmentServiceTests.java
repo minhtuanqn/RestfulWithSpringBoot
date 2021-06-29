@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -227,7 +228,7 @@ public class DepartmentServiceTests {
         Page<StaffEntity> entityPage = new PageImpl<>(entityList);
 
         when(departmentRepository.existsDepartmentEntitiesByIdAndDeleteAtNull(anyInt())).thenReturn(true);
-        when(staffRepository.findStaffEntitiesByDepartmentEntityIdEquals(anyInt(), any())).thenReturn(entityPage);
+        when(staffRepository.findAll(any(), (Pageable) any())).thenReturn(entityPage);
 
         ResourceModel<StaffModel> actualResource = new DepartmentService(departmentRepository, staffRepository).
                 findAllStaffByDepartmentId(1, new PaginationModel(0, 1, "firstName", "asc"));
@@ -254,7 +255,7 @@ public class DepartmentServiceTests {
         entityList.add(new DepartmentEntity(createDepartmentModel()));
         Page<DepartmentEntity> entityPage = new PageImpl<>(entityList);
 
-        when(departmentRepository.findDepartmentEntityByNameContainsAndDeleteAtNull(anyString(), any())).thenReturn(entityPage);
+        when(departmentRepository.findAll(any(), (Pageable) any())).thenReturn(entityPage);
 
         ResourceModel<DepartmentModel> actualResource = new DepartmentService(departmentRepository, staffRepository).
                 findDepartmentLikeName("", new PaginationModel(0, 1, "name", "asc"));

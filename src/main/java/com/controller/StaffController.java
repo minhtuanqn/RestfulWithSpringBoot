@@ -1,6 +1,5 @@
 package com.controller;
 
-import com.entity.StaffEntity;
 import com.model.PaginationModel;
 import com.model.ResourceModel;
 import com.model.StaffModel;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import static com.utils.ValidatorUtils.*;

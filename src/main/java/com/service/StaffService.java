@@ -182,14 +182,6 @@ public class StaffService {
         };
     }
 
-//    private static Specification<StaffEntity> containsNullDeleteAtOfDepId() {
-//        return (root, query, criteriaBuilder) -> {
-//            Join<StaffEntity, DepartmentEntity> staffJoins = root.join(StaffEntity_.DEP_ID);
-//            Predicate equalPredicate = criteriaBuilder.isNull(staffJoins.get(DepartmentEntity_.DELETE_AT));
-//            query.distinct(true);
-//            return equalPredicate;
-//        };
-//    }
 
     /**
      * Search staff list by first name or last name
